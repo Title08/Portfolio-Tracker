@@ -2,8 +2,6 @@
 
 A modern, high-fidelity portfolio tracking application built with React, Tailwind CSS, and a Python FastAPI backend.
 
-![Portfolio Screenshot](path/to/screenshot.png)
-
 ## Features
 
 -   **Asset Tracking**: Track Stocks, Crypto, and Cash (USD/THB).
