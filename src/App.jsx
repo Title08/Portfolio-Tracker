@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Navbar from './components/layout/Navbar';
 import SummaryCard from './components/dashboard/SummaryCard';
 import WalletList from './components/dashboard/WalletList';
@@ -50,6 +50,44 @@ export default function App() {
     const totalThbWalletTHB = calculateTotalTHB(thbWallets);
     const grandTotalTHB = totalInvTHB + totalUsdWalletTHB + totalThbWalletTHB;
 
+    // --- Statistics Calculation ---
+    const investmentStats = useMemo(() => {
+        let totalCost = 0;
+        let totalMarketVal = 0;
+        let bestAsset = null;
+        let worstAsset = null;
+
+        investments.forEach(asset => {
+            const cost = asset.price * asset.quantity;
+            const marketPrice = asset.marketPrice || asset.price;
+            const marketVal = marketPrice * asset.quantity;
+            const pnl = marketVal - cost;
+            const pnlPercent = cost > 0 ? (pnl / cost) * 100 : 0;
+
+            totalCost += cost;
+            totalMarketVal += marketVal;
+
+            if (!bestAsset || pnlPercent > bestAsset.pnlPercent) {
+                bestAsset = { name: asset.symbol, pnlPercent, pnl };
+            }
+            if (!worstAsset || pnlPercent < worstAsset.pnlPercent) {
+                worstAsset = { name: asset.symbol, pnlPercent, pnl };
+            }
+        });
+
+        const totalPnL = totalMarketVal - totalCost;
+        const totalPnLPercent = totalCost > 0 ? (totalPnL / totalCost) * 100 : 0;
+
+        return {
+            totalCost,
+            totalMarketVal,
+            totalPnL,
+            totalPnLPercent,
+            bestAsset,
+            worstAsset
+        };
+    }, [investments]);
+
     // --- Handlers ---
     const handleRefresh = async () => {
         const prices = await fetchLivePrices(assets);
@@ -66,7 +104,7 @@ export default function App() {
 
                 const newPrice = prices[lookupKey];
                 if (newPrice && newPrice > 0) {
-                    return { ...asset, price: newPrice };
+                    return { ...asset, marketPrice: newPrice };
                 }
             }
             return asset;
@@ -340,12 +378,13 @@ export default function App() {
                 onRefresh={handleRefresh}
             />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+            <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
                 <SummaryCard
                     totalTHB={grandTotalTHB}
                     investmentsTotal={totalInvTHB}
                     usdWalletTotal={totalUsdWalletTHB}
                     thbWalletTotal={totalThbWalletTHB}
+                    stats={investmentStats}
                 />
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

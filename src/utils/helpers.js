@@ -43,7 +43,8 @@ export const consolidateAssets = (rawAssets) => {
 
 export const calculateTotalTHB = (list) => {
     return list.reduce((sum, item) => {
-        const usdVal = item.quantity * item.price;
+        const price = item.marketPrice || item.price;
+        const usdVal = item.quantity * price;
         return sum + (usdVal * item.exchangeRate);
     }, 0);
 };
