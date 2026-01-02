@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Loader2 } from 'lucide-react';
-import { searchAssets } from '../../utils/api';
+import { searchAssets } from '../../services/api';
 
 export default function SymbolSearch({ onSelect, required = false }) {
     const [query, setQuery] = useState('');

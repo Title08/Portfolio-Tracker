@@ -1,111 +1,133 @@
 import yfinance as yf
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Dict
-import requests
+from typing import List, Optional
 
-app = FastAPI()
+app = FastAPI(title="Portfolio Tracker API", description="API for fetching real-time financial data using yfinance.")
 
-# Enable CORS for React Frontend (default port 5173)
+# Configure CORS to allow requests from the React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow all for local dev convenience
+    allow_origins=["*"],  # In production, specify your frontend domain
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-
-
 @app.get("/")
 def read_root():
+    """Health check endpoint."""
     return {"status": "ok", "message": "Portfolio Tracker API is running"}
 
 @app.get("/search")
-def search_symbols(q: str):
+def search_assets(q: str):
+    """
+    Search for assets using yfinance.
+    
+    Args:
+        q (str): The search query (e.g., "AAPL", "Bitcoin").
+        
+    Returns:
+        List[dict]: A list of search results with symbol, name, type, and currency.
+    """
     if not q:
         return []
     
-    url = f"https://query2.finance.yahoo.com/v1/finance/search"
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    params = {
-        'q': q,
-        'quotesCount': 10,
-        'newsCount': 0,
-        'listsCount': 0,
-        'enableFuzzyQuery': False
-    }
-    
     try:
-        response = requests.get(url, headers=headers, params=params)
-        data = response.json()
-        if 'quotes' in data:
-            return data['quotes']
-        return []
+        tickers = yf.Search(q, max_results=10).quotes
+        results = []
+        for t in tickers:
+            results.append({
+                "symbol": t['symbol'],
+                "name": t.get('shortname', t.get('longname', t['symbol'])),
+                "type": t.get('quoteType', 'Unknown'),
+                "exchDisp": t.get('exchDisp', ''),
+                "currency": "USD" # yfinance search doesn't always return currency, default to check later
+            })
+        return results
     except Exception as e:
-        print(f"Error searching: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Search error: {e}")
+        return []
 
 @app.get("/info")
 def get_asset_info(symbol: str):
+    """
+    Get detailed information about a specific asset.
+    
+    Args:
+        symbol (str): The ticker symbol (e.g., "AAPL").
+        
+    Returns:
+        dict: Asset details including current price, currency, sector, and industry.
+    """
     try:
         ticker = yf.Ticker(symbol)
         info = ticker.info
+        
+        # Determine price (prioritize fast access fields)
+        price = info.get('currentPrice') or info.get('regularMarketPrice') or info.get('previousClose')
+        
         return {
-            "sector": info.get("sector", ""),
-            "industry": info.get("industry", ""),
-            "website": info.get("website", ""),
-            "logo_url": info.get("logo_url", "")
+            "symbol": symbol,
+            "name": info.get('shortName') or info.get('longName'),
+            "price": price,
+            "currency": info.get('currency', 'USD'),
+            "sector": info.get('sector', 'Unknown'),
+            "industry": info.get('industry', 'Unknown'),
+            "type": info.get('quoteType', 'Unknown')
         }
     except Exception as e:
-        print(f"Error fetching info for {symbol}: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Info error for {symbol}: {e}")
+        raise HTTPException(status_code=404, detail="Asset not found")
 
 @app.get("/prices")
-def get_prices(symbols: str):
+def get_current_prices(symbols: str):
     """
-    Fetch current prices for a comma-separated list of symbols.
-    Example: /prices?symbols=AAPL,BTC-USD
+    Fetch real-time prices for multiple symbols.
+    
+    Args:
+        symbols (str): Comma-separated list of ticker symbols.
+        
+    Returns:
+        dict: A mapping of symbols to their current market price.
     """
     if not symbols:
         return {}
-    
+        
     symbol_list = [s.strip().upper() for s in symbols.split(',')]
+    prices = {}
     
+    # Batch strategy: yfinance Tickers
     try:
-        # yfinance allows fetching multiple tickers at once
         tickers = yf.Tickers(' '.join(symbol_list))
         
-        results = {}
         for symbol in symbol_list:
             try:
-                # Try to get fast price first
+                # Attempt to get fast price
                 ticker = tickers.tickers[symbol]
-                # info = ticker.info # Too slow
-                # history = ticker.history(period="1d") # Faster
                 
-                # Use fast_info if available (newer versions of yfinance)
+                # Try fast_info first (faster, no full fetch)
                 if hasattr(ticker, 'fast_info'):
-                     price = ticker.fast_info['last_price']
+                    price = ticker.fast_info.last_price
+                    if price:
+                        prices[symbol] = price
+                        continue
+                
+                # Fallback to history (slower but reliable)
+                hist = ticker.history(period="1d")
+                if not hist.empty:
+                    prices[symbol] = hist['Close'].iloc[-1]
                 else:
-                     # Fallback to history for older versions or if fast_info fails
-                     hist = ticker.history(period="1d")
-                     if not hist.empty:
-                         price = hist['Close'].iloc[-1]
-                     else:
-                         price = 0
-
-                results[symbol] = price
+                    # Last Resort: info
+                    prices[symbol] = ticker.info.get('currentPrice', 0)
+                    
             except Exception as e:
                 print(f"Error fetching {symbol}: {e}")
-                results[symbol] = 0 # Or null
+                prices[symbol] = 0
                 
-        return results
-
+        return prices
     except Exception as e:
+        print(f"Batch fetch error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

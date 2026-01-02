@@ -3,7 +3,7 @@ import { X, Search, AlertCircle } from 'lucide-react';
 import { formatCurrency } from '../../utils/helpers';
 import { ASSET_DB } from '../../constants/assets';
 import SymbolSearch from '../common/SymbolSearch';
-import { getAssetInfo } from '../../utils/api';
+import { getAssetInfo } from '../../services/api';
 
 export default function AddAssetModal({ isOpen, onClose, onAdd, usdWallets, initialType = 'Investment', initialData = null }) {
     const [formType, setFormType] = useState(initialType);
