@@ -25,12 +25,14 @@ export default function AddAssetModal({ isOpen, onClose, onAdd, usdWallets, init
     useEffect(() => {
         if (isOpen) {
             setFormType(initialType);
+            const savedRate = localStorage.getItem('lastReqExchangeRate') || '35.00';
+
             if (initialData) {
                 // If editing, calculate total cost from qty * price if missing
                 const cost = initialData.totalCost || (initialData.quantity && initialData.price ? (initialData.quantity * initialData.price).toFixed(2) : '');
                 setNewAsset({ ...initialData, totalCost: cost });
             } else {
-                setNewAsset({ name: '', symbol: '', type: 'Stock', quantity: '', price: '', totalCost: '', exchangeRate: '35.00', sector: '', industry: '' });
+                setNewAsset({ name: '', symbol: '', type: 'Stock', quantity: '', price: '', totalCost: '', exchangeRate: savedRate, sector: '', industry: '' });
             }
             setFundingSource('');
             setError('');
@@ -74,7 +76,7 @@ export default function AddAssetModal({ isOpen, onClose, onAdd, usdWallets, init
             const price = parseFloat(newAsset.price);
             if (!isNaN(cost) && !isNaN(price) && price > 0) {
                 // Use more decimals for precision, especially if crypto
-                updates.quantity = (cost / price).toFixed(6);
+                updates.quantity = (cost / price).toFixed(7);
                 // Remove trailing zeros for cleaner look if possible, but keep string for input
                 updates.quantity = parseFloat(updates.quantity).toString();
             }
@@ -107,6 +109,14 @@ export default function AddAssetModal({ isOpen, onClose, onAdd, usdWallets, init
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Save exchange rate preference if using external source
+        if ((formType === 'Investment' && !fundingSource) || formType === 'USD') {
+            if (newAsset.exchangeRate) {
+                localStorage.setItem('lastReqExchangeRate', newAsset.exchangeRate);
+            }
+        }
+
         onAdd(e, { ...newAsset, fundingSource }, formType, setError);
     };
 
@@ -132,6 +142,7 @@ export default function AddAssetModal({ isOpen, onClose, onAdd, usdWallets, init
                             <label className="text-xs text-emerald-400 uppercase font-bold flex items-center gap-1">Symbol</label>
                             <SymbolSearch
                                 onSelect={handleSymbolSelect}
+                                onInputChange={(val) => handleInputChange({ target: { name: 'symbol', value: val } })}
                                 required
                             />
                             {/* Show badges if info detected */}
@@ -173,14 +184,33 @@ export default function AddAssetModal({ isOpen, onClose, onAdd, usdWallets, init
                     )}
 
                     {formType === 'Investment' && (
-                        <div className="pt-2 border-t border-slate-700/50"><div className="space-y-2"><label className="text-xs text-slate-300 uppercase font-bold">Pay With (USD Wallet)</label><select required value={fundingSource} onChange={(e) => { setFundingSource(e.target.value); setError(''); }} className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"><option value="">-- Select Wallet --</option>{usdWallets.map(w => <option key={w.id} value={w.id}>{w.name} (Available: ${formatCurrency(w.quantity).replace('$', '')})</option>)}</select>
-                            {fundingSource && (<div className="bg-blue-500/10 p-3 rounded-lg border border-blue-500/20 text-xs text-blue-300">Total Cost: <b>{newAsset.totalCost ? formatCurrency(newAsset.totalCost) : '$0.00'}</b> will be deducted.</div>)}
-                        </div>
+                        <div className="pt-2 border-t border-slate-700/50">
+                            <div className="space-y-2">
+                                <label className="text-xs text-slate-300 uppercase font-bold">Pay With (USD Wallet)</label>
+                                <select value={fundingSource} onChange={(e) => { setFundingSource(e.target.value); setError(''); }} className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                                    <option value="">External Source (No Wallet)</option>
+                                    {usdWallets.map(w => <option key={w.id} value={w.id}>{w.name} (Available: ${formatCurrency(w.quantity).replace('$', '')})</option>)}
+                                </select>
+                                {fundingSource ? (
+                                    <div className="bg-blue-500/10 p-3 rounded-lg border border-blue-500/20 text-xs text-blue-300">
+                                        Total Cost: <b>{newAsset.totalCost ? formatCurrency(newAsset.totalCost) : '$0.00'}</b> will be deducted.
+                                    </div>
+                                ) : (
+                                    <div className="bg-slate-700/30 p-2 rounded text-[10px] text-slate-400">
+                                        Asset will be added without deducting from any USD wallet. Please ensure Exchange Rate is correct.
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )}
-                    {formType === 'USD' && (<div className="space-y-1"><label className="text-xs text-emerald-400 uppercase font-semibold">Exchange Rate (THB/USD)</label><input required type="number" step="any" name="exchangeRate" value={newAsset.exchangeRate} onChange={handleInputChange} placeholder="35.00" className="w-full bg-slate-900 border border-emerald-500/40 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" /></div>)}
+                    {(formType === 'USD' || (formType === 'Investment' && !fundingSource)) && (
+                        <div className="space-y-1">
+                            <label className="text-xs text-emerald-400 uppercase font-semibold">Exchange Rate (THB/USD)</label>
+                            <input required type="number" step="any" name="exchangeRate" value={newAsset.exchangeRate} onChange={handleInputChange} placeholder="35.00" className="w-full bg-slate-900 border border-emerald-500/40 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                        </div>
+                    )}
                     {error && (<div className="bg-red-500/10 border border-red-500/50 p-3 rounded-lg flex items-start gap-2 animate-in fade-in slide-in-from-top-1"><AlertCircle size={16} className="text-red-500 mt-0.5 shrink-0" /><p className="text-xs text-red-200 font-medium">{error}</p></div>)}
-                    <button type="submit" disabled={formType === 'Investment' && usdWallets.length === 0} className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg mt-2 transition-colors">Save Item</button>
+                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg mt-2 transition-colors">Save Item</button>
                 </form>
             </div>
         </div>

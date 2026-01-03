@@ -1,0 +1,2074 @@
+{
+    "DG": {
+        "name": "Dollar General Corporation",
+        "type": "Stock"
+    },
+    "AIZ": {
+        "name": "Assurant, Inc.",
+        "type": "Stock"
+    },
+    "PSA": {
+        "name": "Public Storage",
+        "type": "Stock"
+    },
+    "FICO": {
+        "name": "Fair Isaac Corporation",
+        "type": "Stock"
+    },
+    "LVS": {
+        "name": "Las Vegas Sands Corp.",
+        "type": "Stock"
+    },
+    "TRMB": {
+        "name": "Trimble Inc.",
+        "type": "Stock"
+    },
+    "PDD": {
+        "name": "PDD Holdings Inc.",
+        "type": "Stock"
+    },
+    "CL": {
+        "name": "Colgate-Palmolive Company",
+        "type": "Stock"
+    },
+    "VTRS": {
+        "name": "Viatris Inc.",
+        "type": "Stock"
+    },
+    "LW": {
+        "name": "Lamb Weston Holdings, Inc.",
+        "type": "Stock"
+    },
+    "TSLA": {
+        "name": "Tesla, Inc.",
+        "type": "Stock"
+    },
+    "VZ": {
+        "name": "Verizon Communications Inc.",
+        "type": "Stock"
+    },
+    "HLT": {
+        "name": "Hilton Worldwide Holdings Inc.",
+        "type": "Stock"
+    },
+    "NFLX": {
+        "name": "Netflix, Inc.",
+        "type": "Stock"
+    },
+    "APD": {
+        "name": "Air Products and Chemicals, Inc",
+        "type": "Stock"
+    },
+    "CARR": {
+        "name": "Carrier Global Corporation",
+        "type": "Stock"
+    },
+    "UHS": {
+        "name": "Universal Health Services, Inc.",
+        "type": "Stock"
+    },
+    "OTIS": {
+        "name": "Otis Worldwide Corporation",
+        "type": "Stock"
+    },
+    "ADSK": {
+        "name": "Autodesk, Inc.",
+        "type": "Stock"
+    },
+    "AXP": {
+        "name": "American Express Company",
+        "type": "Stock"
+    },
+    "DASH": {
+        "name": "DoorDash, Inc.",
+        "type": "Stock"
+    },
+    "ROST": {
+        "name": "Ross Stores, Inc.",
+        "type": "Stock"
+    },
+    "MMM": {
+        "name": "3M Company",
+        "type": "Stock"
+    },
+    "HON": {
+        "name": "Honeywell International Inc.",
+        "type": "Stock"
+    },
+    "BXP": {
+        "name": "BXP, Inc.",
+        "type": "Stock"
+    },
+    "ULTA": {
+        "name": "Ulta Beauty, Inc.",
+        "type": "Stock"
+    },
+    "CSCO": {
+        "name": "Cisco Systems, Inc.",
+        "type": "Stock"
+    },
+    "GS": {
+        "name": "Goldman Sachs Group, Inc. (The)",
+        "type": "Stock"
+    },
+    "HRL": {
+        "name": "Hormel Foods Corporation",
+        "type": "Stock"
+    },
+    "CFG": {
+        "name": "Citizens Financial Group, Inc.",
+        "type": "Stock"
+    },
+    "EXE": {
+        "name": "Expand Energy Corporation",
+        "type": "Stock"
+    },
+    "PCG": {
+        "name": "Pacific Gas & Electric Co.",
+        "type": "Stock"
+    },
+    "MAA": {
+        "name": "Mid-America Apartment Communiti",
+        "type": "Stock"
+    },
+    "EFX": {
+        "name": "Equifax, Inc.",
+        "type": "Stock"
+    },
+    "MSTR": {
+        "name": "Strategy Inc",
+        "type": "Stock"
+    },
+    "KEYS": {
+        "name": "Keysight Technologies Inc.",
+        "type": "Stock"
+    },
+    "FCX": {
+        "name": "Freeport-McMoRan, Inc.",
+        "type": "Stock"
+    },
+    "AMGN": {
+        "name": "Amgen Inc.",
+        "type": "Stock"
+    },
+    "WBD": {
+        "name": "Warner Bros. Discovery, Inc. - ",
+        "type": "Stock"
+    },
+    "ZBRA": {
+        "name": "Zebra Technologies Corporation",
+        "type": "Stock"
+    },
+    "HUBB": {
+        "name": "Hubbell Inc",
+        "type": "Stock"
+    },
+    "ON": {
+        "name": "ON Semiconductor Corporation",
+        "type": "Stock"
+    },
+    "KMB": {
+        "name": "Kimberly-Clark Corporation",
+        "type": "Stock"
+    },
+    "DTE": {
+        "name": "DTE Energy Company",
+        "type": "Stock"
+    },
+    "PNR": {
+        "name": "Pentair plc.",
+        "type": "Stock"
+    },
+    "EXC": {
+        "name": "Exelon Corporation",
+        "type": "Stock"
+    },
+    "MKC": {
+        "name": "McCormick & Company, Incorporat",
+        "type": "Stock"
+    },
+    "APP": {
+        "name": "Applovin Corporation",
+        "type": "Stock"
+    },
+    "AJG": {
+        "name": "Arthur J. Gallagher & Co.",
+        "type": "Stock"
+    },
+    "PTC": {
+        "name": "PTC Inc.",
+        "type": "Stock"
+    },
+    "JBHT": {
+        "name": "J.B. Hunt Transport Services, I",
+        "type": "Stock"
+    },
+    "ICE": {
+        "name": "Intercontinental Exchange Inc.",
+        "type": "Stock"
+    },
+    "WFC": {
+        "name": "Wells Fargo & Company",
+        "type": "Stock"
+    },
+    "LNT": {
+        "name": "Alliant Energy Corporation",
+        "type": "Stock"
+    },
+    "AVGO": {
+        "name": "Broadcom Inc.",
+        "type": "Stock"
+    },
+    "IR": {
+        "name": "Ingersoll Rand Inc.",
+        "type": "Stock"
+    },
+    "RVTY": {
+        "name": "Revvity, Inc.",
+        "type": "Stock"
+    },
+    "MS": {
+        "name": "Morgan Stanley",
+        "type": "Stock"
+    },
+    "COP": {
+        "name": "ConocoPhillips",
+        "type": "Stock"
+    },
+    "O": {
+        "name": "Realty Income Corporation",
+        "type": "Stock"
+    },
+    "ETR": {
+        "name": "Entergy Corporation",
+        "type": "Stock"
+    },
+    "FDS": {
+        "name": "FactSet Research Systems Inc.",
+        "type": "Stock"
+    },
+    "JBL": {
+        "name": "Jabil Inc.",
+        "type": "Stock"
+    },
+    "PKG": {
+        "name": "Packaging Corporation of Americ",
+        "type": "Stock"
+    },
+    "PEP": {
+        "name": "Pepsico, Inc.",
+        "type": "Stock"
+    },
+    "CMS": {
+        "name": "CMS Energy Corporation",
+        "type": "Stock"
+    },
+    "HIG": {
+        "name": "The Hartford Insurance Group, I",
+        "type": "Stock"
+    },
+    "GLW": {
+        "name": "Corning Incorporated",
+        "type": "Stock"
+    },
+    "POOL": {
+        "name": "Pool Corporation",
+        "type": "Stock"
+    },
+    "TTD": {
+        "name": "The Trade Desk, Inc.",
+        "type": "Stock"
+    },
+    "DUK": {
+        "name": "Duke Energy Corporation (Holdin",
+        "type": "Stock"
+    },
+    "DELL": {
+        "name": "Dell Technologies Inc.",
+        "type": "Stock"
+    },
+    "SYF": {
+        "name": "Synchrony Financial",
+        "type": "Stock"
+    },
+    "TMUS": {
+        "name": "T-Mobile US, Inc.",
+        "type": "Stock"
+    },
+    "INVH": {
+        "name": "Invitation Homes Inc.",
+        "type": "Stock"
+    },
+    "RMD": {
+        "name": "ResMed Inc.",
+        "type": "Stock"
+    },
+    "USB": {
+        "name": "U.S. Bancorp",
+        "type": "Stock"
+    },
+    "BK": {
+        "name": "The Bank of New York Mellon Cor",
+        "type": "Stock"
+    },
+    "JKHY": {
+        "name": "Jack Henry & Associates, Inc.",
+        "type": "Stock"
+    },
+    "TYL": {
+        "name": "Tyler Technologies, Inc.",
+        "type": "Stock"
+    },
+    "EA": {
+        "name": "Electronic Arts Inc.",
+        "type": "Stock"
+    },
+    "ROP": {
+        "name": "Roper Technologies, Inc.",
+        "type": "Stock"
+    },
+    "JNJ": {
+        "name": "Johnson & Johnson",
+        "type": "Stock"
+    },
+    "COR": {
+        "name": "Cencora, Inc.",
+        "type": "Stock"
+    },
+    "FIS": {
+        "name": "Fidelity National Information S",
+        "type": "Stock"
+    },
+    "EME": {
+        "name": "EMCOR Group, Inc.",
+        "type": "Stock"
+    },
+    "ECL": {
+        "name": "Ecolab Inc.",
+        "type": "Stock"
+    },
+    "APO": {
+        "name": "Apollo Global Management, Inc. ",
+        "type": "Stock"
+    },
+    "AVB": {
+        "name": "AvalonBay Communities, Inc.",
+        "type": "Stock"
+    },
+    "ADI": {
+        "name": "Analog Devices, Inc.",
+        "type": "Stock"
+    },
+    "BLK": {
+        "name": "BlackRock, Inc.",
+        "type": "Stock"
+    },
+    "ERIE": {
+        "name": "Erie Indemnity Company",
+        "type": "Stock"
+    },
+    "CPT": {
+        "name": "Camden Property Trust",
+        "type": "Stock"
+    },
+    "EXR": {
+        "name": "Extra Space Storage Inc",
+        "type": "Stock"
+    },
+    "GEHC": {
+        "name": "GE HealthCare Technologies Inc.",
+        "type": "Stock"
+    },
+    "GWW": {
+        "name": "W.W. Grainger, Inc.",
+        "type": "Stock"
+    },
+    "PYPL": {
+        "name": "PayPal Holdings, Inc.",
+        "type": "Stock"
+    },
+    "BAC": {
+        "name": "Bank of America Corporation",
+        "type": "Stock"
+    },
+    "OKE": {
+        "name": "ONEOK, Inc.",
+        "type": "Stock"
+    },
+    "TROW": {
+        "name": "T. Rowe Price Group, Inc.",
+        "type": "Stock"
+    },
+    "A": {
+        "name": "Agilent Technologies, Inc.",
+        "type": "Stock"
+    },
+    "BALL": {
+        "name": "Ball Corporation",
+        "type": "Stock"
+    },
+    "APTV": {
+        "name": "Aptiv PLC",
+        "type": "Stock"
+    },
+    "PANW": {
+        "name": "Palo Alto Networks, Inc.",
+        "type": "Stock"
+    },
+    "SCHW": {
+        "name": "Charles Schwab Corporation (The",
+        "type": "Stock"
+    },
+    "BSX": {
+        "name": "Boston Scientific Corporation",
+        "type": "Stock"
+    },
+    "L": {
+        "name": "Loews Corporation",
+        "type": "Stock"
+    },
+    "NVDA": {
+        "name": "NVIDIA Corporation",
+        "type": "Stock"
+    },
+    "WELL": {
+        "name": "Welltower Inc.",
+        "type": "Stock"
+    },
+    "FTV": {
+        "name": "Fortive Corporation",
+        "type": "Stock"
+    },
+    "INCY": {
+        "name": "Incyte Corporation",
+        "type": "Stock"
+    },
+    "CRWD": {
+        "name": "CrowdStrike Holdings, Inc.",
+        "type": "Stock"
+    },
+    "SPG": {
+        "name": "Simon Property Group, Inc.",
+        "type": "Stock"
+    },
+    "LUV": {
+        "name": "Southwest Airlines Company",
+        "type": "Stock"
+    },
+    "DDOG": {
+        "name": "Datadog, Inc.",
+        "type": "Stock"
+    },
+    "MTCH": {
+        "name": "Match Group, Inc.",
+        "type": "Stock"
+    },
+    "PG": {
+        "name": "Procter & Gamble Company (The)",
+        "type": "Stock"
+    },
+    "ALGN": {
+        "name": "Align Technology, Inc.",
+        "type": "Stock"
+    },
+    "GEV": {
+        "name": "GE Vernova Inc.",
+        "type": "Stock"
+    },
+    "PAYC": {
+        "name": "Paycom Software, Inc.",
+        "type": "Stock"
+    },
+    "YUM": {
+        "name": "Yum! Brands, Inc.",
+        "type": "Stock"
+    },
+    "MSFT": {
+        "name": "Microsoft Corporation",
+        "type": "Stock"
+    },
+    "MSCI": {
+        "name": "MSCI Inc.",
+        "type": "Stock"
+    },
+    "CPAY": {
+        "name": "Corpay, Inc.",
+        "type": "Stock"
+    },
+    "AMP": {
+        "name": "Ameriprise Financial, Inc.",
+        "type": "Stock"
+    },
+    "BBY": {
+        "name": "Best Buy Co., Inc.",
+        "type": "Stock"
+    },
+    "EOG": {
+        "name": "EOG Resources, Inc.",
+        "type": "Stock"
+    },
+    "NRG": {
+        "name": "NRG Energy, Inc.",
+        "type": "Stock"
+    },
+    "EBAY": {
+        "name": "eBay Inc.",
+        "type": "Stock"
+    },
+    "EL": {
+        "name": "Estee Lauder Companies, Inc. (T",
+        "type": "Stock"
+    },
+    "HII": {
+        "name": "Huntington Ingalls Industries, ",
+        "type": "Stock"
+    },
+    "GM": {
+        "name": "General Motors Company",
+        "type": "Stock"
+    },
+    "DPZ": {
+        "name": "Domino's Pizza Inc",
+        "type": "Stock"
+    },
+    "CME": {
+        "name": "CME Group Inc.",
+        "type": "Stock"
+    },
+    "CHTR": {
+        "name": "Charter Communications, Inc.",
+        "type": "Stock"
+    },
+    "FOXA": {
+        "name": "Fox Corporation",
+        "type": "Stock"
+    },
+    "ALLE": {
+        "name": "Allegion plc",
+        "type": "Stock"
+    },
+    "AMCR": {
+        "name": "Amcor plc",
+        "type": "Stock"
+    },
+    "ADBE": {
+        "name": "Adobe Inc.",
+        "type": "Stock"
+    },
+    "DOW": {
+        "name": "Dow Inc.",
+        "type": "Stock"
+    },
+    "REGN": {
+        "name": "Regeneron Pharmaceuticals, Inc.",
+        "type": "Stock"
+    },
+    "TFC": {
+        "name": "Truist Financial Corporation",
+        "type": "Stock"
+    },
+    "MTD": {
+        "name": "Mettler-Toledo International, I",
+        "type": "Stock"
+    },
+    "PAYX": {
+        "name": "Paychex, Inc.",
+        "type": "Stock"
+    },
+    "SLB": {
+        "name": "SLB Limited",
+        "type": "Stock"
+    },
+    "ALB": {
+        "name": "Albemarle Corporation",
+        "type": "Stock"
+    },
+    "SNA": {
+        "name": "Snap-On Incorporated",
+        "type": "Stock"
+    },
+    "DHR": {
+        "name": "Danaher Corporation",
+        "type": "Stock"
+    },
+    "PFE": {
+        "name": "Pfizer, Inc.",
+        "type": "Stock"
+    },
+    "JCI": {
+        "name": "Johnson Controls International ",
+        "type": "Stock"
+    },
+    "CTVA": {
+        "name": "Corteva, Inc.",
+        "type": "Stock"
+    },
+    "DAL": {
+        "name": "Delta Air Lines, Inc.",
+        "type": "Stock"
+    },
+    "MAR": {
+        "name": "Marriott International",
+        "type": "Stock"
+    },
+    "AME": {
+        "name": "AMETEK, Inc.",
+        "type": "Stock"
+    },
+    "UBER": {
+        "name": "Uber Technologies, Inc.",
+        "type": "Stock"
+    },
+    "EG": {
+        "name": "Everest Group, Ltd.",
+        "type": "Stock"
+    },
+    "HD": {
+        "name": "Home Depot, Inc. (The)",
+        "type": "Stock"
+    },
+    "TGT": {
+        "name": "Target Corporation",
+        "type": "Stock"
+    },
+    "CAG": {
+        "name": "ConAgra Brands, Inc.",
+        "type": "Stock"
+    },
+    "KEY": {
+        "name": "KeyCorp",
+        "type": "Stock"
+    },
+    "TEAM": {
+        "name": "Atlassian Corporation",
+        "type": "Stock"
+    },
+    "SRE": {
+        "name": "DBA Sempra",
+        "type": "Stock"
+    },
+    "XOM": {
+        "name": "Exxon Mobil Corporation",
+        "type": "Stock"
+    },
+    "ES": {
+        "name": "Eversource Energy (D/B/A)",
+        "type": "Stock"
+    },
+    "DXCM": {
+        "name": "DexCom, Inc.",
+        "type": "Stock"
+    },
+    "CCL": {
+        "name": "Carnival Corporation",
+        "type": "Stock"
+    },
+    "CNC": {
+        "name": "Centene Corporation",
+        "type": "Stock"
+    },
+    "ISRG": {
+        "name": "Intuitive Surgical, Inc.",
+        "type": "Stock"
+    },
+    "WAT": {
+        "name": "Waters Corporation",
+        "type": "Stock"
+    },
+    "WYNN": {
+        "name": "Wynn Resorts, Limited",
+        "type": "Stock"
+    },
+    "PEG": {
+        "name": "Public Service Enterprise Group",
+        "type": "Stock"
+    },
+    "KDP": {
+        "name": "Keurig Dr Pepper Inc.",
+        "type": "Stock"
+    },
+    "ED": {
+        "name": "Consolidated Edison, Inc.",
+        "type": "Stock"
+    },
+    "DECK": {
+        "name": "Deckers Outdoor Corporation",
+        "type": "Stock"
+    },
+    "CCEP": {
+        "name": "Coca-Cola Europacific Partners ",
+        "type": "Stock"
+    },
+    "SYY": {
+        "name": "Sysco Corporation",
+        "type": "Stock"
+    },
+    "J": {
+        "name": "Jacobs Solutions Inc.",
+        "type": "Stock"
+    },
+    "DVN": {
+        "name": "Devon Energy Corporation",
+        "type": "Stock"
+    },
+    "CAH": {
+        "name": "Cardinal Health, Inc.",
+        "type": "Stock"
+    },
+    "GD": {
+        "name": "General Dynamics Corporation",
+        "type": "Stock"
+    },
+    "KVUE": {
+        "name": "Kenvue Inc.",
+        "type": "Stock"
+    },
+    "PHM": {
+        "name": "PulteGroup, Inc.",
+        "type": "Stock"
+    },
+    "FAST": {
+        "name": "Fastenal Company",
+        "type": "Stock"
+    },
+    "MNST": {
+        "name": "Monster Beverage Corporation",
+        "type": "Stock"
+    },
+    "SO": {
+        "name": "Southern Company (The)",
+        "type": "Stock"
+    },
+    "ABBV": {
+        "name": "AbbVie Inc.",
+        "type": "Stock"
+    },
+    "IEX": {
+        "name": "IDEX Corporation",
+        "type": "Stock"
+    },
+    "OXY": {
+        "name": "Occidental Petroleum Corporatio",
+        "type": "Stock"
+    },
+    "ODFL": {
+        "name": "Old Dominion Freight Line, Inc.",
+        "type": "Stock"
+    },
+    "NOC": {
+        "name": "Northrop Grumman Corporation",
+        "type": "Stock"
+    },
+    "EVRG": {
+        "name": "Evergy, Inc.",
+        "type": "Stock"
+    },
+    "COO": {
+        "name": "The Cooper Companies, Inc.",
+        "type": "Stock"
+    },
+    "CCI": {
+        "name": "Crown Castle Inc.",
+        "type": "Stock"
+    },
+    "MCHP": {
+        "name": "Microchip Technology Incorporat",
+        "type": "Stock"
+    },
+    "CRH": {
+        "name": "CRH PLC",
+        "type": "Stock"
+    },
+    "FITB": {
+        "name": "Fifth Third Bancorp",
+        "type": "Stock"
+    },
+    "BEN": {
+        "name": "Franklin Resources, Inc.",
+        "type": "Stock"
+    },
+    "HUM": {
+        "name": "Humana Inc.",
+        "type": "Stock"
+    },
+    "UPS": {
+        "name": "United Parcel Service, Inc.",
+        "type": "Stock"
+    },
+    "VRTX": {
+        "name": "Vertex Pharmaceuticals Incorpor",
+        "type": "Stock"
+    },
+    "INTC": {
+        "name": "Intel Corporation",
+        "type": "Stock"
+    },
+    "KMI": {
+        "name": "Kinder Morgan, Inc.",
+        "type": "Stock"
+    },
+    "HOLX": {
+        "name": "Hologic, Inc.",
+        "type": "Stock"
+    },
+    "ITW": {
+        "name": "Illinois Tool Works Inc.",
+        "type": "Stock"
+    },
+    "RSG": {
+        "name": "Republic Services, Inc.",
+        "type": "Stock"
+    },
+    "NI": {
+        "name": "NiSource Inc",
+        "type": "Stock"
+    },
+    "ESS": {
+        "name": "Essex Property Trust, Inc.",
+        "type": "Stock"
+    },
+    "ZBH": {
+        "name": "Zimmer Biomet Holdings, Inc.",
+        "type": "Stock"
+    },
+    "AXON": {
+        "name": "Axon Enterprise, Inc.",
+        "type": "Stock"
+    },
+    "HOOD": {
+        "name": "Robinhood Markets, Inc.",
+        "type": "Stock"
+    },
+    "HST": {
+        "name": "Host Hotels & Resorts, Inc.",
+        "type": "Stock"
+    },
+    "SWKS": {
+        "name": "Skyworks Solutions, Inc.",
+        "type": "Stock"
+    },
+    "VLO": {
+        "name": "Valero Energy Corporation",
+        "type": "Stock"
+    },
+    "SPGI": {
+        "name": "S&P Global Inc.",
+        "type": "Stock"
+    },
+    "QCOM": {
+        "name": "QUALCOMM Incorporated",
+        "type": "Stock"
+    },
+    "RCL": {
+        "name": "Royal Caribbean Cruises Ltd.",
+        "type": "Stock"
+    },
+    "GRMN": {
+        "name": "Garmin Ltd.",
+        "type": "Stock"
+    },
+    "DAY": {
+        "name": "Dayforce, Inc.",
+        "type": "Stock"
+    },
+    "AWK": {
+        "name": "American Water Works Company, I",
+        "type": "Stock"
+    },
+    "IRM": {
+        "name": "Iron Mountain Incorporated (Del",
+        "type": "Stock"
+    },
+    "MPC": {
+        "name": "Marathon Petroleum Corporation",
+        "type": "Stock"
+    },
+    "MCK": {
+        "name": "McKesson Corporation",
+        "type": "Stock"
+    },
+    "ZS": {
+        "name": "Zscaler, Inc.",
+        "type": "Stock"
+    },
+    "FSLR": {
+        "name": "First Solar, Inc.",
+        "type": "Stock"
+    },
+    "MU": {
+        "name": "Micron Technology, Inc.",
+        "type": "Stock"
+    },
+    "BG": {
+        "name": "Bunge Limited",
+        "type": "Stock"
+    },
+    "NEE": {
+        "name": "NextEra Energy, Inc.",
+        "type": "Stock"
+    },
+    "KO": {
+        "name": "Coca-Cola Company (The)",
+        "type": "Stock"
+    },
+    "MTB": {
+        "name": "M&T Bank Corporation",
+        "type": "Stock"
+    },
+    "VTR": {
+        "name": "Ventas, Inc.",
+        "type": "Stock"
+    },
+    "VICI": {
+        "name": "VICI Properties Inc.",
+        "type": "Stock"
+    },
+    "ADM": {
+        "name": "Archer-Daniels-Midland Company",
+        "type": "Stock"
+    },
+    "PNC": {
+        "name": "PNC Financial Services Group, I",
+        "type": "Stock"
+    },
+    "BAX": {
+        "name": "Baxter International Inc.",
+        "type": "Stock"
+    },
+    "PWR": {
+        "name": "Quanta Services, Inc.",
+        "type": "Stock"
+    },
+    "TRGP": {
+        "name": "Targa Resources, Inc.",
+        "type": "Stock"
+    },
+    "IDXX": {
+        "name": "IDEXX Laboratories, Inc.",
+        "type": "Stock"
+    },
+    "FIX": {
+        "name": "Comfort Systems USA, Inc.",
+        "type": "Stock"
+    },
+    "ROL": {
+        "name": "Rollins, Inc.",
+        "type": "Stock"
+    },
+    "PFG": {
+        "name": "Principal Financial Group Inc",
+        "type": "Stock"
+    },
+    "C": {
+        "name": "Citigroup, Inc.",
+        "type": "Stock"
+    },
+    "HPQ": {
+        "name": "HP Inc.",
+        "type": "Stock"
+    },
+    "URI": {
+        "name": "United Rentals, Inc.",
+        "type": "Stock"
+    },
+    "DHI": {
+        "name": "D.R. Horton, Inc.",
+        "type": "Stock"
+    },
+    "WDC": {
+        "name": "Western Digital Corporation",
+        "type": "Stock"
+    },
+    "WY": {
+        "name": "Weyerhaeuser Company",
+        "type": "Stock"
+    },
+    "VST": {
+        "name": "Vistra Corp.",
+        "type": "Stock"
+    },
+    "TRI": {
+        "name": "Thomson Reuters Corp",
+        "type": "Stock"
+    },
+    "GEN": {
+        "name": "Gen Digital Inc.",
+        "type": "Stock"
+    },
+    "MOS": {
+        "name": "Mosaic Company (The)",
+        "type": "Stock"
+    },
+    "ROK": {
+        "name": "Rockwell Automation, Inc.",
+        "type": "Stock"
+    },
+    "GE": {
+        "name": "GE Aerospace",
+        "type": "Stock"
+    },
+    "KIM": {
+        "name": "Kimco Realty Corporation (HC)",
+        "type": "Stock"
+    },
+    "GILD": {
+        "name": "Gilead Sciences, Inc.",
+        "type": "Stock"
+    },
+    "LIN": {
+        "name": "Linde plc",
+        "type": "Stock"
+    },
+    "DLR": {
+        "name": "Digital Realty Trust, Inc.",
+        "type": "Stock"
+    },
+    "HAS": {
+        "name": "Hasbro, Inc.",
+        "type": "Stock"
+    },
+    "ARES": {
+        "name": "Ares Management Corporation",
+        "type": "Stock"
+    },
+    "VRSK": {
+        "name": "Verisk Analytics, Inc.",
+        "type": "Stock"
+    },
+    "BRO": {
+        "name": "Brown & Brown, Inc.",
+        "type": "Stock"
+    },
+    "LRCX": {
+        "name": "Lam Research Corporation",
+        "type": "Stock"
+    },
+    "TKO": {
+        "name": "TKO Group Holdings, Inc.",
+        "type": "Stock"
+    },
+    "META": {
+        "name": "Meta Platforms, Inc.",
+        "type": "Stock"
+    },
+    "LOW": {
+        "name": "Lowe's Companies, Inc.",
+        "type": "Stock"
+    },
+    "COST": {
+        "name": "Costco Wholesale Corporation",
+        "type": "Stock"
+    },
+    "LHX": {
+        "name": "L3Harris Technologies, Inc.",
+        "type": "Stock"
+    },
+    "ZTS": {
+        "name": "Zoetis Inc.",
+        "type": "Stock"
+    },
+    "F": {
+        "name": "Ford Motor Company",
+        "type": "Stock"
+    },
+    "MGM": {
+        "name": "MGM Resorts International",
+        "type": "Stock"
+    },
+    "TPR": {
+        "name": "Tapestry, Inc.",
+        "type": "Stock"
+    },
+    "CLX": {
+        "name": "Clorox Company (The)",
+        "type": "Stock"
+    },
+    "CAT": {
+        "name": "Caterpillar, Inc.",
+        "type": "Stock"
+    },
+    "LEN": {
+        "name": "Lennar Corporation",
+        "type": "Stock"
+    },
+    "CTAS": {
+        "name": "Cintas Corporation",
+        "type": "Stock"
+    },
+    "BMY": {
+        "name": "Bristol-Myers Squibb Company",
+        "type": "Stock"
+    },
+    "CVX": {
+        "name": "Chevron Corporation",
+        "type": "Stock"
+    },
+    "LULU": {
+        "name": "lululemon athletica inc.",
+        "type": "Stock"
+    },
+    "FTNT": {
+        "name": "Fortinet, Inc.",
+        "type": "Stock"
+    },
+    "EIX": {
+        "name": "Edison International",
+        "type": "Stock"
+    },
+    "APA": {
+        "name": "APA Corporation",
+        "type": "Stock"
+    },
+    "PPG": {
+        "name": "PPG Industries, Inc.",
+        "type": "Stock"
+    },
+    "BRK.B": {
+        "name": "BRK.B",
+        "type": "Stock"
+    },
+    "MO": {
+        "name": "Altria Group, Inc.",
+        "type": "Stock"
+    },
+    "GIS": {
+        "name": "General Mills, Inc.",
+        "type": "Stock"
+    },
+    "INSM": {
+        "name": "Insmed Incorporated",
+        "type": "Stock"
+    },
+    "SMCI": {
+        "name": "Super Micro Computer, Inc.",
+        "type": "Stock"
+    },
+    "DD": {
+        "name": "DuPont de Nemours, Inc.",
+        "type": "Stock"
+    },
+    "CBRE": {
+        "name": "CBRE Group Inc",
+        "type": "Stock"
+    },
+    "PODD": {
+        "name": "Insulet Corporation",
+        "type": "Stock"
+    },
+    "AMAT": {
+        "name": "Applied Materials, Inc.",
+        "type": "Stock"
+    },
+    "PSX": {
+        "name": "Phillips 66",
+        "type": "Stock"
+    },
+    "CTRA": {
+        "name": "Coterra Energy Inc.",
+        "type": "Stock"
+    },
+    "LYV": {
+        "name": "Live Nation Entertainment, Inc.",
+        "type": "Stock"
+    },
+    "ATO": {
+        "name": "Atmos Energy Corporation",
+        "type": "Stock"
+    },
+    "CINF": {
+        "name": "Cincinnati Financial Corporatio",
+        "type": "Stock"
+    },
+    "SNPS": {
+        "name": "Synopsys, Inc.",
+        "type": "Stock"
+    },
+    "HAL": {
+        "name": "Halliburton Company",
+        "type": "Stock"
+    },
+    "WMB": {
+        "name": "Williams Companies, Inc. (The)",
+        "type": "Stock"
+    },
+    "DVA": {
+        "name": "DaVita Inc.",
+        "type": "Stock"
+    },
+    "TEL": {
+        "name": "TE Connectivity plc",
+        "type": "Stock"
+    },
+    "PGR": {
+        "name": "Progressive Corporation (The)",
+        "type": "Stock"
+    },
+    "IT": {
+        "name": "Gartner, Inc.",
+        "type": "Stock"
+    },
+    "CVNA": {
+        "name": "Carvana Co.",
+        "type": "Stock"
+    },
+    "MET": {
+        "name": "MetLife, Inc.",
+        "type": "Stock"
+    },
+    "KHC": {
+        "name": "The Kraft Heinz Company",
+        "type": "Stock"
+    },
+    "WMT": {
+        "name": "Walmart Inc.",
+        "type": "Stock"
+    },
+    "AKAM": {
+        "name": "Akamai Technologies, Inc.",
+        "type": "Stock"
+    },
+    "VLTO": {
+        "name": "Veralto Corp",
+        "type": "Stock"
+    },
+    "ALL": {
+        "name": "Allstate Corporation (The)",
+        "type": "Stock"
+    },
+    "CDW": {
+        "name": "CDW Corporation",
+        "type": "Stock"
+    },
+    "CHD": {
+        "name": "Church & Dwight Company, Inc.",
+        "type": "Stock"
+    },
+    "MA": {
+        "name": "Mastercard Incorporated",
+        "type": "Stock"
+    },
+    "PM": {
+        "name": "Philip Morris International Inc",
+        "type": "Stock"
+    },
+    "WDAY": {
+        "name": "Workday, Inc.",
+        "type": "Stock"
+    },
+    "EXPE": {
+        "name": "Expedia Group, Inc.",
+        "type": "Stock"
+    },
+    "MDT": {
+        "name": "Medtronic plc.",
+        "type": "Stock"
+    },
+    "AFL": {
+        "name": "AFLAC Incorporated",
+        "type": "Stock"
+    },
+    "SJM": {
+        "name": "The J.M. Smucker Company",
+        "type": "Stock"
+    },
+    "IBM": {
+        "name": "International Business Machines",
+        "type": "Stock"
+    },
+    "ORCL": {
+        "name": "Oracle Corporation",
+        "type": "Stock"
+    },
+    "DOC": {
+        "name": "Healthpeak Properties, Inc.",
+        "type": "Stock"
+    },
+    "INTU": {
+        "name": "Intuit Inc.",
+        "type": "Stock"
+    },
+    "TT": {
+        "name": "Trane Technologies plc",
+        "type": "Stock"
+    },
+    "NTAP": {
+        "name": "NetApp, Inc.",
+        "type": "Stock"
+    },
+    "HSY": {
+        "name": "The Hershey Company",
+        "type": "Stock"
+    },
+    "FOX": {
+        "name": "Fox Corporation",
+        "type": "Stock"
+    },
+    "BX": {
+        "name": "Blackstone Inc.",
+        "type": "Stock"
+    },
+    "BA": {
+        "name": "Boeing Company (The)",
+        "type": "Stock"
+    },
+    "PLD": {
+        "name": "Prologis, Inc.",
+        "type": "Stock"
+    },
+    "PPL": {
+        "name": "PPL Corporation",
+        "type": "Stock"
+    },
+    "WEC": {
+        "name": "WEC Energy Group, Inc.",
+        "type": "Stock"
+    },
+    "BKNG": {
+        "name": "Booking Holdings Inc. Common St",
+        "type": "Stock"
+    },
+    "AZO": {
+        "name": "AutoZone, Inc.",
+        "type": "Stock"
+    },
+    "CVS": {
+        "name": "CVS Health Corporation",
+        "type": "Stock"
+    },
+    "CBOE": {
+        "name": "Cboe Global Markets, Inc.",
+        "type": "Stock"
+    },
+    "TECH": {
+        "name": "Bio-Techne Corp",
+        "type": "Stock"
+    },
+    "ASML": {
+        "name": "ASML Holding N.V. - New York Re",
+        "type": "Stock"
+    },
+    "MRNA": {
+        "name": "Moderna, Inc.",
+        "type": "Stock"
+    },
+    "CSGP": {
+        "name": "CoStar Group, Inc.",
+        "type": "Stock"
+    },
+    "KR": {
+        "name": "Kroger Company (The)",
+        "type": "Stock"
+    },
+    "UNP": {
+        "name": "Union Pacific Corporation",
+        "type": "Stock"
+    },
+    "PSKY": {
+        "name": "Paramount Skydance Corporation",
+        "type": "Stock"
+    },
+    "WRB": {
+        "name": "W.R. Berkley Corporation",
+        "type": "Stock"
+    },
+    "EQR": {
+        "name": "Equity Residential",
+        "type": "Stock"
+    },
+    "WTW": {
+        "name": "Willis Towers Watson Public Lim",
+        "type": "Stock"
+    },
+    "AON": {
+        "name": "Aon plc",
+        "type": "Stock"
+    },
+    "EMR": {
+        "name": "Emerson Electric Company",
+        "type": "Stock"
+    },
+    "LII": {
+        "name": "Lennox International, Inc.",
+        "type": "Stock"
+    },
+    "AVY": {
+        "name": "Avery Dennison Corporation",
+        "type": "Stock"
+    },
+    "RF": {
+        "name": "Regions Financial Corporation",
+        "type": "Stock"
+    },
+    "NDAQ": {
+        "name": "Nasdaq, Inc.",
+        "type": "Stock"
+    },
+    "NTRS": {
+        "name": "Northern Trust Corporation",
+        "type": "Stock"
+    },
+    "PLTR": {
+        "name": "Palantir Technologies Inc.",
+        "type": "Stock"
+    },
+    "KLAC": {
+        "name": "KLA Corporation",
+        "type": "Stock"
+    },
+    "DGX": {
+        "name": "Quest Diagnostics Incorporated",
+        "type": "Stock"
+    },
+    "BDX": {
+        "name": "Becton, Dickinson and Company",
+        "type": "Stock"
+    },
+    "STT": {
+        "name": "State Street Corporation",
+        "type": "Stock"
+    },
+    "TSCO": {
+        "name": "Tractor Supply Company",
+        "type": "Stock"
+    },
+    "WAB": {
+        "name": "Westinghouse Air Brake Technolo",
+        "type": "Stock"
+    },
+    "CHRW": {
+        "name": "C.H. Robinson Worldwide, Inc.",
+        "type": "Stock"
+    },
+    "MELI": {
+        "name": "MercadoLibre, Inc.",
+        "type": "Stock"
+    },
+    "APH": {
+        "name": "Amphenol Corporation",
+        "type": "Stock"
+    },
+    "DE": {
+        "name": "Deere & Company",
+        "type": "Stock"
+    },
+    "T": {
+        "name": "AT&T Inc.",
+        "type": "Stock"
+    },
+    "PNW": {
+        "name": "Pinnacle West Capital Corporati",
+        "type": "Stock"
+    },
+    "FRT": {
+        "name": "Federal Realty Investment Trust",
+        "type": "Stock"
+    },
+    "AMT": {
+        "name": "American Tower Corporation (REI",
+        "type": "Stock"
+    },
+    "GPC": {
+        "name": "Genuine Parts Company",
+        "type": "Stock"
+    },
+    "NWS": {
+        "name": "News Corporation",
+        "type": "Stock"
+    },
+    "VRSN": {
+        "name": "VeriSign, Inc.",
+        "type": "Stock"
+    },
+    "GNRC": {
+        "name": "Generac Holdlings Inc.",
+        "type": "Stock"
+    },
+    "ANET": {
+        "name": "Arista Networks, Inc.",
+        "type": "Stock"
+    },
+    "AMD": {
+        "name": "Advanced Micro Devices, Inc.",
+        "type": "Stock"
+    },
+    "HPE": {
+        "name": "Hewlett Packard Enterprise Comp",
+        "type": "Stock"
+    },
+    "LH": {
+        "name": "Labcorp Holdings Inc.",
+        "type": "Stock"
+    },
+    "XYZ": {
+        "name": "Block, Inc.",
+        "type": "Stock"
+    },
+    "MAS": {
+        "name": "Masco Corporation",
+        "type": "Stock"
+    },
+    "MPWR": {
+        "name": "Monolithic Power Systems, Inc.",
+        "type": "Stock"
+    },
+    "SHW": {
+        "name": "Sherwin-Williams Company (The)",
+        "type": "Stock"
+    },
+    "PH": {
+        "name": "Parker-Hannifin Corporation",
+        "type": "Stock"
+    },
+    "ABT": {
+        "name": "Abbott Laboratories",
+        "type": "Stock"
+    },
+    "FISV": {
+        "name": "Fiserv, Inc.",
+        "type": "Stock"
+    },
+    "CMI": {
+        "name": "Cummins Inc.",
+        "type": "Stock"
+    },
+    "DRI": {
+        "name": "Darden Restaurants, Inc.",
+        "type": "Stock"
+    },
+    "MDLZ": {
+        "name": "Mondelez International, Inc.",
+        "type": "Stock"
+    },
+    "MCO": {
+        "name": "Moody's Corporation",
+        "type": "Stock"
+    },
+    "AEE": {
+        "name": "Ameren Corporation",
+        "type": "Stock"
+    },
+    "MCD": {
+        "name": "McDonald's Corporation",
+        "type": "Stock"
+    },
+    "NEM": {
+        "name": "Newmont Corporation",
+        "type": "Stock"
+    },
+    "ALNY": {
+        "name": "Alnylam Pharmaceuticals, Inc.",
+        "type": "Stock"
+    },
+    "RL": {
+        "name": "Ralph Lauren Corporation",
+        "type": "Stock"
+    },
+    "MOH": {
+        "name": "Molina Healthcare Inc",
+        "type": "Stock"
+    },
+    "NCLH": {
+        "name": "Norwegian Cruise Line Holdings ",
+        "type": "Stock"
+    },
+    "NVR": {
+        "name": "NVR, Inc.",
+        "type": "Stock"
+    },
+    "ELV": {
+        "name": "Elevance Health, Inc.",
+        "type": "Stock"
+    },
+    "STZ": {
+        "name": "Constellation Brands, Inc.",
+        "type": "Stock"
+    },
+    "ETN": {
+        "name": "Eaton Corporation, PLC",
+        "type": "Stock"
+    },
+    "CPB": {
+        "name": "The Campbell's Company",
+        "type": "Stock"
+    },
+    "BR": {
+        "name": "Broadridge Financial Solutions,",
+        "type": "Stock"
+    },
+    "V": {
+        "name": "Visa Inc.",
+        "type": "Stock"
+    },
+    "STX": {
+        "name": "Seagate Technology Holdings PLC",
+        "type": "Stock"
+    },
+    "CMCSA": {
+        "name": "Comcast Corporation",
+        "type": "Stock"
+    },
+    "DIS": {
+        "name": "Walt Disney Company (The)",
+        "type": "Stock"
+    },
+    "AAPL": {
+        "name": "Apple Inc.",
+        "type": "Stock"
+    },
+    "BF.B": {
+        "name": "BF.B",
+        "type": "Stock"
+    },
+    "WM": {
+        "name": "Waste Management, Inc.",
+        "type": "Stock"
+    },
+    "AOS": {
+        "name": "A.O. Smith Corporation",
+        "type": "Stock"
+    },
+    "CRM": {
+        "name": "Salesforce, Inc.",
+        "type": "Stock"
+    },
+    "GOOG": {
+        "name": "Alphabet Inc.",
+        "type": "Stock"
+    },
+    "CSX": {
+        "name": "CSX Corporation",
+        "type": "Stock"
+    },
+    "ADP": {
+        "name": "Automatic Data Processing, Inc.",
+        "type": "Stock"
+    },
+    "FDX": {
+        "name": "FedEx Corporation",
+        "type": "Stock"
+    },
+    "OMC": {
+        "name": "Omnicom Group Inc.",
+        "type": "Stock"
+    },
+    "RTX": {
+        "name": "RTX Corporation",
+        "type": "Stock"
+    },
+    "IQV": {
+        "name": "IQVIA Holdings, Inc.",
+        "type": "Stock"
+    },
+    "VMC": {
+        "name": "Vulcan Materials Company (Holdi",
+        "type": "Stock"
+    },
+    "IBKR": {
+        "name": "Interactive Brokers Group, Inc.",
+        "type": "Stock"
+    },
+    "LDOS": {
+        "name": "Leidos Holdings, Inc.",
+        "type": "Stock"
+    },
+    "SYK": {
+        "name": "Stryker Corporation",
+        "type": "Stock"
+    },
+    "GOOGL": {
+        "name": "Alphabet Inc.",
+        "type": "Stock"
+    },
+    "IVZ": {
+        "name": "Invesco Ltd",
+        "type": "Stock"
+    },
+    "NOW": {
+        "name": "ServiceNow, Inc.",
+        "type": "Stock"
+    },
+    "TSN": {
+        "name": "Tyson Foods, Inc.",
+        "type": "Stock"
+    },
+    "BLDR": {
+        "name": "Builders FirstSource, Inc.",
+        "type": "Stock"
+    },
+    "COF": {
+        "name": "Capital One Financial Corporati",
+        "type": "Stock"
+    },
+    "EW": {
+        "name": "Edwards Lifesciences Corporatio",
+        "type": "Stock"
+    },
+    "AMZN": {
+        "name": "Amazon.com, Inc.",
+        "type": "Stock"
+    },
+    "AIG": {
+        "name": "American International Group, I",
+        "type": "Stock"
+    },
+    "IFF": {
+        "name": "International Flavors & Fragran",
+        "type": "Stock"
+    },
+    "JPM": {
+        "name": "JP Morgan Chase & Co.",
+        "type": "Stock"
+    },
+    "EQIX": {
+        "name": "Equinix, Inc.",
+        "type": "Stock"
+    },
+    "GL": {
+        "name": "Globe Life Inc.",
+        "type": "Stock"
+    },
+    "LMT": {
+        "name": "Lockheed Martin Corporation",
+        "type": "Stock"
+    },
+    "NUE": {
+        "name": "Nucor Corporation",
+        "type": "Stock"
+    },
+    "ARM": {
+        "name": "Arm Holdings plc",
+        "type": "Stock"
+    },
+    "AES": {
+        "name": "The AES Corporation",
+        "type": "Stock"
+    },
+    "MLM": {
+        "name": "Martin Marietta Materials, Inc.",
+        "type": "Stock"
+    },
+    "SW": {
+        "name": "Smurfit WestRock plc",
+        "type": "Stock"
+    },
+    "ARE": {
+        "name": "Alexandria Real Estate Equities",
+        "type": "Stock"
+    },
+    "REG": {
+        "name": "Regency Centers Corporation",
+        "type": "Stock"
+    },
+    "RJF": {
+        "name": "Raymond James Financial, Inc.",
+        "type": "Stock"
+    },
+    "GDDY": {
+        "name": "GoDaddy Inc.",
+        "type": "Stock"
+    },
+    "ACN": {
+        "name": "Accenture plc",
+        "type": "Stock"
+    },
+    "PRU": {
+        "name": "Prudential Financial, Inc.",
+        "type": "Stock"
+    },
+    "FANG": {
+        "name": "Diamondback Energy, Inc.",
+        "type": "Stock"
+    },
+    "UDR": {
+        "name": "UDR, Inc.",
+        "type": "Stock"
+    },
+    "BKR": {
+        "name": "Baker Hughes Company",
+        "type": "Stock"
+    },
+    "WSM": {
+        "name": "Williams-Sonoma, Inc.",
+        "type": "Stock"
+    },
+    "MRK": {
+        "name": "Merck & Company, Inc.",
+        "type": "Stock"
+    },
+    "COIN": {
+        "name": "Coinbase Global, Inc. - 3",
+        "type": "Stock"
+    },
+    "NKE": {
+        "name": "Nike, Inc.",
+        "type": "Stock"
+    },
+    "ACGL": {
+        "name": "Arch Capital Group Ltd.",
+        "type": "Stock"
+    },
+    "NDSN": {
+        "name": "Nordson Corporation",
+        "type": "Stock"
+    },
+    "D": {
+        "name": "Dominion Energy, Inc.",
+        "type": "Stock"
+    },
+    "AEP": {
+        "name": "American Electric Power Company",
+        "type": "Stock"
+    },
+    "CDNS": {
+        "name": "Cadence Design Systems, Inc.",
+        "type": "Stock"
+    },
+    "CNP": {
+        "name": "CenterPoint Energy, Inc (Holdin",
+        "type": "Stock"
+    },
+    "CF": {
+        "name": "CF Industries Holdings, Inc.",
+        "type": "Stock"
+    },
+    "FER": {
+        "name": "Ferrovial SE",
+        "type": "Stock"
+    },
+    "PCAR": {
+        "name": "PACCAR Inc.",
+        "type": "Stock"
+    },
+    "HCA": {
+        "name": "HCA Healthcare, Inc.",
+        "type": "Stock"
+    },
+    "CRL": {
+        "name": "Charles River Laboratories Inte",
+        "type": "Stock"
+    },
+    "CEG": {
+        "name": "Constellation Energy Corporatio",
+        "type": "Stock"
+    },
+    "TTWO": {
+        "name": "Take-Two Interactive Software, ",
+        "type": "Stock"
+    },
+    "SOLV": {
+        "name": "Solventum Corporation",
+        "type": "Stock"
+    },
+    "SHOP": {
+        "name": "Shopify Inc.",
+        "type": "Stock"
+    },
+    "EPAM": {
+        "name": "EPAM Systems, Inc.",
+        "type": "Stock"
+    },
+    "DOV": {
+        "name": "Dover Corporation",
+        "type": "Stock"
+    },
+    "HBAN": {
+        "name": "Huntington Bancshares Incorpora",
+        "type": "Stock"
+    },
+    "LYB": {
+        "name": "LyondellBasell Industries NV",
+        "type": "Stock"
+    },
+    "BIIB": {
+        "name": "Biogen Inc.",
+        "type": "Stock"
+    },
+    "TXN": {
+        "name": "Texas Instruments Incorporated",
+        "type": "Stock"
+    },
+    "GPN": {
+        "name": "Global Payments Inc.",
+        "type": "Stock"
+    },
+    "TER": {
+        "name": "Teradyne, Inc.",
+        "type": "Stock"
+    },
+    "TRV": {
+        "name": "The Travelers Companies, Inc.",
+        "type": "Stock"
+    },
+    "KKR": {
+        "name": "KKR & Co. Inc.",
+        "type": "Stock"
+    },
+    "Q": {
+        "name": "Qnity Electronics, Inc.",
+        "type": "Stock"
+    },
+    "CMG": {
+        "name": "Chipotle Mexican Grill, Inc.",
+        "type": "Stock"
+    },
+    "HWM": {
+        "name": "Howmet Aerospace Inc.",
+        "type": "Stock"
+    },
+    "SBAC": {
+        "name": "SBA Communications Corporation",
+        "type": "Stock"
+    },
+    "TJX": {
+        "name": "TJX Companies, Inc. (The)",
+        "type": "Stock"
+    },
+    "NSC": {
+        "name": "Norfolk Southern Corporation",
+        "type": "Stock"
+    },
+    "XEL": {
+        "name": "Xcel Energy Inc.",
+        "type": "Stock"
+    },
+    "SWK": {
+        "name": "Stanley Black & Decker, Inc.",
+        "type": "Stock"
+    },
+    "MRVL": {
+        "name": "Marvell Technology, Inc.",
+        "type": "Stock"
+    },
+    "SNDK": {
+        "name": "Sandisk Corporation",
+        "type": "Stock"
+    },
+    "CI": {
+        "name": "The Cigna Group",
+        "type": "Stock"
+    },
+    "EQT": {
+        "name": "EQT Corporation",
+        "type": "Stock"
+    },
+    "DLTR": {
+        "name": "Dollar Tree, Inc.",
+        "type": "Stock"
+    },
+    "WST": {
+        "name": "West Pharmaceutical Services, I",
+        "type": "Stock"
+    },
+    "MSI": {
+        "name": "Motorola Solutions, Inc.",
+        "type": "Stock"
+    },
+    "NWSA": {
+        "name": "News Corporation",
+        "type": "Stock"
+    },
+    "LLY": {
+        "name": "Eli Lilly and Company",
+        "type": "Stock"
+    },
+    "TDG": {
+        "name": "Transdigm Group Incorporated",
+        "type": "Stock"
+    },
+    "TPL": {
+        "name": "Texas Pacific Land Corporation",
+        "type": "Stock"
+    },
+    "ABNB": {
+        "name": "Airbnb, Inc.",
+        "type": "Stock"
+    },
+    "STLD": {
+        "name": "Steel Dynamics, Inc.",
+        "type": "Stock"
+    },
+    "HSIC": {
+        "name": "Henry Schein, Inc.",
+        "type": "Stock"
+    },
+    "TMO": {
+        "name": "Thermo Fisher Scientific Inc",
+        "type": "Stock"
+    },
+    "CPRT": {
+        "name": "Copart, Inc.",
+        "type": "Stock"
+    },
+    "ORLY": {
+        "name": "O'Reilly Automotive, Inc.",
+        "type": "Stock"
+    },
+    "NXPI": {
+        "name": "NXP Semiconductors N.V.",
+        "type": "Stock"
+    },
+    "XYL": {
+        "name": "Xylem Inc.",
+        "type": "Stock"
+    },
+    "TAP": {
+        "name": "Molson Coors Beverage Company",
+        "type": "Stock"
+    },
+    "IP": {
+        "name": "International Paper Company",
+        "type": "Stock"
+    },
+    "AZN": {
+        "name": "Astrazeneca PLC",
+        "type": "Stock"
+    },
+    "CTSH": {
+        "name": "Cognizant Technology Solutions ",
+        "type": "Stock"
+    },
+    "UNH": {
+        "name": "UnitedHealth Group Incorporated",
+        "type": "Stock"
+    },
+    "UAL": {
+        "name": "United Airlines Holdings, Inc.",
+        "type": "Stock"
+    },
+    "FE": {
+        "name": "FirstEnergy Corp.",
+        "type": "Stock"
+    },
+    "TXT": {
+        "name": "Textron Inc.",
+        "type": "Stock"
+    },
+    "MMC": {
+        "name": "Marsh & McLennan Companies, Inc",
+        "type": "Stock"
+    },
+    "FFIV": {
+        "name": "F5, Inc.",
+        "type": "Stock"
+    },
+    "CB": {
+        "name": "Chubb Limited",
+        "type": "Stock"
+    },
+    "TDY": {
+        "name": "Teledyne Technologies Incorpora",
+        "type": "Stock"
+    },
+    "STE": {
+        "name": "STERIS plc (Ireland)",
+        "type": "Stock"
+    },
+    "SBUX": {
+        "name": "Starbucks Corporation",
+        "type": "Stock"
+    },
+    "EXPD": {
+        "name": "Expeditors International of Was",
+        "type": "Stock"
+    }
+}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Search, Loader2 } from 'lucide-react';
 import { searchAssets } from '../../services/api';
 
-export default function SymbolSearch({ onSelect, required = false }) {
+export default function SymbolSearch({ onSelect, onInputChange, required = false }) {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +59,10 @@ export default function SymbolSearch({ onSelect, required = false }) {
                     type="text"
                     required={required}
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    onChange={(e) => {
+                        setQuery(e.target.value);
+                        if (onInputChange) onInputChange(e.target.value);
+                    }}
                     placeholder="Search e.g. AAPL, BTC-USD"
                     className="w-full bg-slate-900 border border-emerald-500/50 rounded-lg pl-10 pr-4 py-2 text-white uppercase focus:ring-indigo-500 focus:outline-none placeholder:normal-case"
                 />
