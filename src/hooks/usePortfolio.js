@@ -129,57 +129,61 @@ export function usePortfolio() {
 
             const fundingSource = newAssetData.fundingSource;
 
-            if (!fundingSource) {
-                setError('Please select a USD Wallet to pay from.');
-                return;
-            }
+            if (fundingSource) {
+                const walletId = parseInt(fundingSource);
+                const wallet = assets.find(w => w.id === walletId);
+                const costUSD = asset.quantity * asset.price;
 
-            const walletId = parseInt(fundingSource);
-            const wallet = assets.find(w => w.id === walletId);
-            const costUSD = asset.quantity * asset.price;
-
-            if (!wallet) {
-                setError('Selected wallet not found.');
-                return;
-            }
-
-            if (wallet.quantity >= costUSD) {
-                asset.exchangeRate = wallet.exchangeRate;
-
-                // Deduct from Wallet
-                updatedAssets = updatedAssets.map(a => {
-                    if (a.id === walletId) {
-                        return { ...a, quantity: a.quantity - costUSD };
-                    }
-                    return a;
-                });
-
-                // MERGE LOGIC
-                const existingStockIndex = updatedAssets.findIndex(a => a.symbol === asset.symbol && a.category === 'Investment');
-
-                if (existingStockIndex >= 0) {
-                    const existing = updatedAssets[existingStockIndex];
-                    const totalQty = existing.quantity + asset.quantity;
-
-                    const totalValUSD = (existing.quantity * existing.price) + (asset.quantity * asset.price);
-                    const avgPrice = totalQty > 0 ? totalValUSD / totalQty : 0;
-
-                    const totalValTHB = (existing.quantity * existing.price * existing.exchangeRate) + (asset.quantity * asset.price * asset.exchangeRate);
-                    const avgRate = totalValUSD > 0 ? totalValTHB / totalValUSD : existing.exchangeRate;
-
-                    updatedAssets[existingStockIndex] = {
-                        ...existing,
-                        quantity: totalQty,
-                        price: avgPrice,
-                        exchangeRate: avgRate
-                    };
-                } else {
-                    updatedAssets.push(asset);
+                if (!wallet) {
+                    setError('Selected wallet not found.');
+                    return;
                 }
 
+                if (wallet.quantity >= costUSD) {
+                    asset.exchangeRate = wallet.exchangeRate;
+
+                    // Deduct from Wallet
+                    updatedAssets = updatedAssets.map(a => {
+                        if (a.id === walletId) {
+                            return { ...a, quantity: a.quantity - costUSD };
+                        }
+                        return a;
+                    });
+                } else {
+                    setError(`Insufficient funds in ${wallet.name}. Balance: ${formatCurrency(wallet.quantity)}`);
+                    return;
+                }
             } else {
-                setError(`Insufficient funds in ${wallet.name}. Balance: ${formatCurrency(wallet.quantity)}`);
-                return;
+                // No Wallet - External Source
+                // Use the manually entered exchange rate
+                asset.exchangeRate = parseFloat(newAssetData.exchangeRate);
+                if (isNaN(asset.exchangeRate) || asset.exchangeRate <= 0) {
+                    // Fallback or Error? Modal enforces it, but safe to default or check
+                    asset.exchangeRate = 35.0;
+                }
+            }
+
+            // MERGE LOGIC (Run for both Wallet and No-Wallet flows)
+            const existingStockIndex = updatedAssets.findIndex(a => a.symbol === asset.symbol && a.category === 'Investment');
+
+            if (existingStockIndex >= 0) {
+                const existing = updatedAssets[existingStockIndex];
+                const totalQty = existing.quantity + asset.quantity;
+
+                const totalValUSD = (existing.quantity * existing.price) + (asset.quantity * asset.price);
+                const avgPrice = totalQty > 0 ? totalValUSD / totalQty : 0;
+
+                const totalValTHB = (existing.quantity * existing.price * existing.exchangeRate) + (asset.quantity * asset.price * asset.exchangeRate);
+                const avgRate = totalValUSD > 0 ? totalValTHB / totalValUSD : existing.exchangeRate;
+
+                updatedAssets[existingStockIndex] = {
+                    ...existing,
+                    quantity: totalQty,
+                    price: avgPrice,
+                    exchangeRate: avgRate
+                };
+            } else {
+                updatedAssets.push(asset);
             }
         }
 

@@ -4,8 +4,11 @@ A modern, high-fidelity portfolio tracking application built with React, Tailwin
 
 ## Features
 
+-   **Smart Autocomplete**: Instantly recognizes 500+ stocks (S&P 500, Nasdaq 100, Dow Jones) and autofills details.
+-   **Indices & ETFs**: Track major market indices (`^GSPC`, `^NDX`, `^DJI`) and their ETFs directly.
 -   **Asset Tracking**: Track Stocks, Crypto, and Cash (USD/THB).
 -   **Real-time Prices**: Live price updates via Yahoo Finance.
+-   **Persistence**: Remembers your preferred external exchange rates automatically.
 -   **Sector & Industry**: Automatic tagging of assets for better diversification visibility.
 -   **Multi-Currency**: Seamlessly handle USD investments and THB local currency.
 -   **Exchange**: Simulate currency exchanges between wallets.
