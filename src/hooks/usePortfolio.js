@@ -321,6 +321,26 @@ export function usePortfolio() {
         setAssets(assets.filter(a => a.id !== id));
     };
 
+    const importAssets = (jsonData) => {
+        try {
+            const parsed = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+            if (!Array.isArray(parsed)) {
+                throw new Error("Invalid data format: Expected an array.");
+            }
+            // Basic validation: Check if items have id
+            const isValid = parsed.every(item => item.id && item.name);
+            if (!isValid) {
+                throw new Error("Invalid data: Items missing required fields (id, name).");
+            }
+
+            setAssets(parsed);
+            return { success: true };
+        } catch (error) {
+            console.error("Import failed:", error);
+            return { success: false, message: error.message };
+        }
+    };
+
     return {
         assets,
         investments,
@@ -336,6 +356,7 @@ export function usePortfolio() {
         exchangeCurrency,
         sellAsset,
         handleTransaction,
-        deleteAsset
+        deleteAsset,
+        importAssets
     };
 }

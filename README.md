@@ -9,6 +9,7 @@ A modern, high-fidelity portfolio tracking application built with React, Tailwin
 -   **Sector & Industry**: Automatic tagging of assets for better diversification visibility.
 -   **Multi-Currency**: Seamlessly handle USD investments and THB local currency.
 -   **Exchange**: Simulate currency exchanges between wallets.
+-   **Sync & Backup**: Manual Import/Export of portfolio data (JSON) for cross-device usage.
 -   **Visualizations**: Clean, responsive UI with dark mode aesthetics.
 -   **Dashboard Statistics**: Comprehensive overview of Net Worth, Total Cost, and PnL.
 

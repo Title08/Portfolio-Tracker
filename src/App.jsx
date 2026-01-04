@@ -7,6 +7,7 @@ import AddAssetModal from './components/modals/AddAssetModal';
 import ExchangeModal from './components/modals/ExchangeModal';
 import SellModal from './components/modals/SellModal';
 import TransactionModal from './components/modals/TransactionModal';
+import ImportExportModal from './components/modals/ImportExportModal';
 import { usePortfolio } from './hooks/usePortfolio';
 
 export default function App() {
@@ -25,7 +26,8 @@ export default function App() {
         exchangeCurrency,
         sellAsset,
         handleTransaction,
-        deleteAsset
+        deleteAsset,
+        importAssets
     } = usePortfolio();
 
     // UI State (Modals)
@@ -41,6 +43,8 @@ export default function App() {
     const [isTransactionOpen, setIsTransactionOpen] = useState(false);
     const [transactionWallet, setTransactionWallet] = useState(null);
     const [transactionType, setTransactionType] = useState('DEPOSIT');
+
+    const [isSyncOpen, setIsSyncOpen] = useState(false);
 
     // UI Handlers
     const onAddAsset = (e, newAssetData, type, setError) => {
@@ -97,6 +101,7 @@ export default function App() {
                 onOpenExchange={() => setIsExchangeOpen(true)}
                 onOpenAdd={() => { setFormType('Investment'); setAssetToEdit(null); setIsFormOpen(true); }}
                 onRefresh={refreshPrices}
+                onOpenSync={() => setIsSyncOpen(true)}
             />
 
             <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -172,6 +177,13 @@ export default function App() {
                 onTransaction={onTransaction}
                 wallet={transactionWallet}
                 type={transactionType}
+            />
+
+            <ImportExportModal
+                isOpen={isSyncOpen}
+                onClose={() => setIsSyncOpen(false)}
+                assets={assets}
+                onImport={importAssets}
             />
         </div>
     );

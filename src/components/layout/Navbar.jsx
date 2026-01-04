@@ -1,7 +1,7 @@
 import React from 'react';
-import { Briefcase, ArrowRightLeft, Plus } from 'lucide-react';
+import { Briefcase, ArrowRightLeft, Plus, DatabaseBackup } from 'lucide-react';
 
-export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh }) {
+export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh, onOpenSync }) {
     return (
         <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,6 +13,9 @@ export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh }) {
                         <span className="font-bold text-xl tracking-tight">Portfolio<span className="text-indigo-500">Tracker</span></span>
                     </div>
                     <div className="flex items-center gap-2">
+                        <button onClick={onOpenSync} className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-all border border-slate-700 hover:border-indigo-500/50 hover:text-indigo-400">
+                            <DatabaseBackup size={16} /> Sync
+                        </button>
                         <button onClick={onRefresh} className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-all border border-slate-700 hover:border-emerald-500/50 hover:text-emerald-400">
                             Refresh
                         </button>
