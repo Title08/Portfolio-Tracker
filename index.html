@@ -6,6 +6,9 @@
 
   <link rel="icon" type="image/png" href="/favicon.png?v=2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Security Hardening: Content Security Policy -->
+  <!-- allow 'unsafe-inline' and 'unsafe-eval' for Vite Dev HMR and React; in strict Prod these should be removed if possible -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:8000 ws://localhost:5173; img-src 'self' data: https:; font-src 'self' data:;">
   <title>Portfolio Tracker</title>
 </head>
 

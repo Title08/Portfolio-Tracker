@@ -1,9 +1,21 @@
 import yfinance as yf
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 
 app = FastAPI(title="Portfolio Tracker API", description="API for fetching real-time financial data using yfinance.")
+
+# Global Exception Handler (Security Hardening)
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    # Log the actual error internally (print to console or use logger)
+    print(f"INTERNAL ERROR: {exc}") 
+    # Return a generic message to the client to hide internal logic/tracebacks
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error. Please contact support."}
+    )
 
 # Configure CORS to allow requests from the React frontend
 app.add_middleware(
