@@ -4,6 +4,7 @@ A modern, high-fidelity portfolio tracking application built with React, Tailwin
 
 ## Features
 
+-   **AI Analysis**: Comprehensive portfolio analysis using Groq/AI with selectable strategies (Defensive, Growth, Balanced, etc.).
 -   **Smart Autocomplete**: Instantly recognizes 500+ stocks (S&P 500, Nasdaq 100, Dow Jones) and autofills details.
 -   **Indices & ETFs**: Track major market indices (`^GSPC`, `^NDX`, `^DJI`) and their ETFs directly.
 -   **Asset Tracking**: Track Stocks, Crypto, and Cash (USD/THB).
@@ -19,14 +20,18 @@ A modern, high-fidelity portfolio tracking application built with React, Tailwin
 ## Tech Stack
 
 -   **Frontend**: React, Vite, Tailwind CSS, Lucide React (Icons).
--   **Backend**: Python, FastAPI, yfinance (Yahoo Finance API).
+-   **Backend**: Python, FastAPI, yfinance (Yahoo Finance API), Groq (AI).
 -   **Containerization**: Docker & Docker Compose.
 
 ## Project Structure
 
 ```
 ├── api/                 # Python FastAPI Backend
-│   ├── main.py          # API Endpoints
+│   ├── app/             # Application Package
+│   │   ├── models.py    # Pydantic Schemas
+│   │   ├── routers/     # API Endpoints (Assets, Analysis)
+│   │   └── services/    # Business Logic (Finance, AI)
+│   ├── main.py          # App Entry Point
 │   └── Dockerfile       # Backend Docker Config
 ├── src/                 # React Frontend
 │   ├── components/      # UI Components
@@ -34,20 +39,31 @@ A modern, high-fidelity portfolio tracking application built with React, Tailwin
 │   ├── services/        # API Services
 │   ├── utils/           # Helper functions
 │   └── App.jsx          # Main Application Component
-└── docker-compose.yml   # Docker Orchestration
+├── docker-compose.yml   # Docker Orchestration
+└── .env                 # Environment Variables (Ignored by Git)
 ```
 
 ## Getting Started
+
+### Prerequisites
+
+-   Get a free API Key from [Groq Cloud](https://console.groq.com/).
 
 ### Option 1: Docker (Recommended)
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/portfolio-tracker.git
-    cd portfolio-tracker
+    git clone https://github.com/Title08/Portfolio-Tracker.git
+    cd Portfolio-Tracker
     ```
 
-2.  **Run with Docker Compose**:
+2.  **Configure Environment**:
+    Create a `.env` file in the root directory:
+    ```bash
+    GROQ_API_KEY=your_groq_api_key_here
+    ```
+
+3.  **Run with Docker Compose**:
     ```bash
     docker-compose up --build
     ```
@@ -62,13 +78,7 @@ A modern, high-fidelity portfolio tracking application built with React, Tailwin
 
 #### Installation
 
-1.  **Frontend Setup**:
-    ```bash
-    npm install
-    npm run dev
-    ```
-
-2.  **Backend Setup**:
+1.  **Backend Setup**:
     ```bash
     # Create virtual environment
     python -m venv .venv
@@ -76,6 +86,10 @@ A modern, high-fidelity portfolio tracking application built with React, Tailwin
     # Activate script (Windows: .\.venv\Scripts\Activate, Mac/Linux: source .venv/bin/activate)
     # Install dependencies
     pip install -r api/requirements.txt
+    
+    # Set Environment Variable (or use .env with python-dotenv)
+    export GROQ_API_KEY=your_key  # (Linux/Mac)
+    set GROQ_API_KEY=your_key     # (Windows CMD)
     
     # Run API
     python api/main.py --reload
