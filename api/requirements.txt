@@ -4,3 +4,6 @@ yfinance
 requests
 pandas
 lxml
+pandas
+lxml
+groq

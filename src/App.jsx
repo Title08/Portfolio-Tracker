@@ -1,26 +1,48 @@
 import React, { useState } from 'react';
+
+// --- Components ---
+// Layout
 import Navbar from './components/layout/Navbar';
+
+// Dashboard
 import SummaryCard from './components/dashboard/SummaryCard';
 import WalletList from './components/dashboard/WalletList';
 import InvestmentTable from './components/dashboard/InvestmentTable';
+
+// Modals
 import AddAssetModal from './components/modals/AddAssetModal';
 import ExchangeModal from './components/modals/ExchangeModal';
 import SellModal from './components/modals/SellModal';
 import TransactionModal from './components/modals/TransactionModal';
 import ImportExportModal from './components/modals/ImportExportModal';
+import AIAnalysisModal from './components/modals/AIAnalysisModal';
+
+// --- Logic/Hooks ---
 import { usePortfolio } from './hooks/usePortfolio';
 
+/**
+ * Main Application Component
+ * 
+ * Manages the high-level layout and modal states.
+ * Data logic is delegated to the `usePortfolio` hook.
+ */
 export default function App() {
+    // --- Data Management (Custom Hook) ---
     const {
-        assets, // Needed for modals lookup if necessary
+        // Data
+        assets,
         investments,
         usdWallets,
         thbWallets,
+        investmentStats,
+
+        // Calculated Totals
         totalInvTHB,
         totalUsdWalletTHB,
         totalThbWalletTHB,
         grandTotalTHB,
-        investmentStats,
+
+        // Actions
         refreshPrices,
         addAsset,
         exchangeCurrency,
@@ -30,23 +52,31 @@ export default function App() {
         importAssets
     } = usePortfolio();
 
-    // UI State (Modals)
-    const [isFormOpen, setIsFormOpen] = useState(false);
-    const [formType, setFormType] = useState('Investment');
-    const [assetToEdit, setAssetToEdit] = useState(null);
+    // --- Local UI State (Modals) ---
 
-    const [isExchangeOpen, setIsExchangeOpen] = useState(false);
+    // Asset Management Modals
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [formType, setFormType] = useState('Investment'); // 'Investment' | 'Wallet'
+    const [assetToEdit, setAssetToEdit] = useState(null);
 
     const [isSellOpen, setIsSellOpen] = useState(false);
     const [assetToSell, setAssetToSell] = useState(null);
 
+    // Wallet/Currency Modals
+    const [isExchangeOpen, setIsExchangeOpen] = useState(false);
     const [isTransactionOpen, setIsTransactionOpen] = useState(false);
     const [transactionWallet, setTransactionWallet] = useState(null);
-    const [transactionType, setTransactionType] = useState('DEPOSIT');
+    const [transactionType, setTransactionType] = useState('DEPOSIT'); // 'DEPOSIT' | 'WITHDRAW'
 
+    // Feature Modals
     const [isSyncOpen, setIsSyncOpen] = useState(false);
+    const [isAIOpen, setIsAIOpen] = useState(false);
 
-    // UI Handlers
+    // --- Event Handlers ---
+
+    /**
+     * Handles adding or editing an asset/wallet.
+     */
     const onAddAsset = (e, newAssetData, type, setError) => {
         const success = addAsset(newAssetData, type, setError);
         if (success) {
@@ -55,20 +85,31 @@ export default function App() {
         }
     };
 
+    /**
+     * Handles currency exchange between wallets.
+     */
     const onExchange = (e, exchangeData, setError) => {
         const success = exchangeCurrency(exchangeData, setError);
         if (success) setIsExchangeOpen(false);
     };
 
+    /**
+     * Handles selling an asset.
+     */
     const onSell = (e, sellData, setError) => {
         const success = sellAsset(sellData, setError);
         if (success) setIsSellOpen(false);
     };
 
+    /**
+     * Handles deposits and withdrawals for wallets.
+     */
     const onTransaction = (e, transactionData, setError) => {
         const success = handleTransaction(transactionData, setError);
         if (success) setIsTransactionOpen(false);
     };
+
+    // --- Modal Openers ---
 
     const openBuyMore = (asset) => {
         setFormType('Investment');
@@ -95,16 +136,22 @@ export default function App() {
         setIsTransactionOpen(true);
     };
 
+    // --- Render ---
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-emerald-500 selection:text-white pb-20">
+            {/* Navigation Bar */}
             <Navbar
                 onOpenExchange={() => setIsExchangeOpen(true)}
                 onOpenAdd={() => { setFormType('Investment'); setAssetToEdit(null); setIsFormOpen(true); }}
                 onRefresh={refreshPrices}
                 onOpenSync={() => setIsSyncOpen(true)}
+                onOpenAI={() => setIsAIOpen(true)}
             />
 
+            {/* Main Dashboard Content */}
             <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+                {/* Top Summary Stats */}
                 <SummaryCard
                     totalTHB={grandTotalTHB}
                     investmentsTotal={totalInvTHB}
@@ -114,6 +161,7 @@ export default function App() {
                 />
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    {/* Left Column: Wallets */}
                     <div className="lg:col-span-4 space-y-6">
                         <WalletList
                             title="THB Wallet"
@@ -135,6 +183,7 @@ export default function App() {
                         />
                     </div>
 
+                    {/* Right Column: Investment Portfolio */}
                     <div className="lg:col-span-8">
                         <InvestmentTable
                             investments={investments}
@@ -146,6 +195,8 @@ export default function App() {
                     </div>
                 </div>
             </main>
+
+            {/* --- Modals --- */}
 
             <AddAssetModal
                 isOpen={isFormOpen}
@@ -184,6 +235,12 @@ export default function App() {
                 onClose={() => setIsSyncOpen(false)}
                 assets={assets}
                 onImport={importAssets}
+            />
+
+            <AIAnalysisModal
+                isOpen={isAIOpen}
+                onClose={() => setIsAIOpen(false)}
+                portfolio={investments}
             />
         </div>
     );
