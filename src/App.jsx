@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Pages
+import DashboardPage from './pages/DashboardPage';
+import NewsPage from './pages/NewsPage';
 
 // --- Components ---
 // Layout
-import Navbar from './components/layout/Navbar';
+// Navbar moved to specific pages
 
-// Dashboard
-import SummaryCard from './components/dashboard/SummaryCard';
-import WalletList from './components/dashboard/WalletList';
-import InvestmentTable from './components/dashboard/InvestmentTable';
 
 // Modals
 import AddAssetModal from './components/modals/AddAssetModal';
@@ -138,110 +139,86 @@ export default function App() {
 
     // --- Render ---
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-emerald-500 selection:text-white pb-20">
-            {/* Navigation Bar */}
-            <Navbar
-                onOpenExchange={() => setIsExchangeOpen(true)}
-                onOpenAdd={() => { setFormType('Investment'); setAssetToEdit(null); setIsFormOpen(true); }}
-                onRefresh={refreshPrices}
-                onOpenSync={() => setIsSyncOpen(true)}
-                onOpenAI={() => setIsAIOpen(true)}
-            />
+        <BrowserRouter>
+            <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-emerald-500 selection:text-white">
+                {/* Navigation Bar */}
+                {/* Navigation Bar Removed from Global Layout */}
 
-            {/* Main Dashboard Content */}
-            <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-                {/* Top Summary Stats */}
-                <SummaryCard
-                    totalTHB={grandTotalTHB}
-                    investmentsTotal={totalInvTHB}
-                    usdWalletTotal={totalUsdWalletTHB}
-                    thbWalletTotal={totalThbWalletTHB}
-                    stats={investmentStats}
+                <Routes>
+                    <Route path="/" element={
+                        <DashboardPage
+                            grandTotalTHB={grandTotalTHB}
+                            totalInvTHB={totalInvTHB}
+                            totalUsdWalletTHB={totalUsdWalletTHB}
+                            totalThbWalletTHB={totalThbWalletTHB}
+                            investmentStats={investmentStats}
+                            thbWallets={thbWallets}
+                            usdWallets={usdWallets}
+                            investments={investments}
+                            openTransactionModal={openTransactionModal}
+                            deleteAsset={deleteAsset}
+                            openBuyMore={openBuyMore}
+                            openSellModal={openSellModal}
+                            // Navbar Handlers
+                            onOpenExchange={() => setIsExchangeOpen(true)}
+                            onOpenAdd={() => { setFormType('Investment'); setAssetToEdit(null); setIsFormOpen(true); }}
+                            onRefresh={refreshPrices}
+                            onOpenSync={() => setIsSyncOpen(true)}
+                            onOpenAI={() => setIsAIOpen(true)}
+                        />
+                    } />
+
+                    <Route path="/news" element={<NewsPage />} />
+                </Routes>
+
+                {/* --- Modals (Global) --- */}
+
+                <AddAssetModal
+                    isOpen={isFormOpen}
+                    onClose={() => setIsFormOpen(false)}
+                    onAdd={onAddAsset}
+                    usdWallets={usdWallets}
+                    initialType={formType}
+                    initialData={assetToEdit}
                 />
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    {/* Left Column: Wallets */}
-                    <div className="lg:col-span-4 space-y-6">
-                        <WalletList
-                            title="THB Wallet"
-                            totalValue={totalThbWalletTHB}
-                            items={thbWallets}
-                            currency="THB"
-                            onDeposit={(item) => openTransactionModal('DEPOSIT', item)}
-                            onWithdraw={(item) => openTransactionModal('WITHDRAW', item)}
-                            onDelete={(id) => deleteAsset(id)}
-                        />
-                        <WalletList
-                            title="USD Wallet"
-                            totalValue={totalUsdWalletTHB}
-                            items={usdWallets}
-                            currency="USD"
-                            onDeposit={(item) => openTransactionModal('DEPOSIT', item)}
-                            onWithdraw={(item) => openTransactionModal('WITHDRAW', item)}
-                            onDelete={(id) => deleteAsset(id)}
-                        />
-                    </div>
+                <ExchangeModal
+                    isOpen={isExchangeOpen}
+                    onClose={() => setIsExchangeOpen(false)}
+                    onExchange={onExchange}
+                    thbWallets={thbWallets}
+                    usdWallets={usdWallets}
+                />
 
-                    {/* Right Column: Investment Portfolio */}
-                    <div className="lg:col-span-8">
-                        <InvestmentTable
-                            investments={investments}
-                            totalValue={totalInvTHB}
-                            onBuyMore={openBuyMore}
-                            onSell={openSellModal}
-                            onDelete={deleteAsset}
-                        />
-                    </div>
-                </div>
-            </main>
+                <SellModal
+                    isOpen={isSellOpen}
+                    onClose={() => setIsSellOpen(false)}
+                    onSell={onSell}
+                    asset={assetToSell}
+                />
 
-            {/* --- Modals --- */}
+                <TransactionModal
+                    isOpen={isTransactionOpen}
+                    onClose={() => setIsTransactionOpen(false)}
+                    onTransaction={onTransaction}
+                    wallet={transactionWallet}
+                    type={transactionType}
+                />
 
-            <AddAssetModal
-                isOpen={isFormOpen}
-                onClose={() => setIsFormOpen(false)}
-                onAdd={onAddAsset}
-                usdWallets={usdWallets}
-                initialType={formType}
-                initialData={assetToEdit}
-            />
+                <ImportExportModal
+                    isOpen={isSyncOpen}
+                    onClose={() => setIsSyncOpen(false)}
+                    assets={assets}
+                    onImport={importAssets}
+                />
 
-            <ExchangeModal
-                isOpen={isExchangeOpen}
-                onClose={() => setIsExchangeOpen(false)}
-                onExchange={onExchange}
-                thbWallets={thbWallets}
-                usdWallets={usdWallets}
-            />
-
-            <SellModal
-                isOpen={isSellOpen}
-                onClose={() => setIsSellOpen(false)}
-                onSell={onSell}
-                asset={assetToSell}
-            />
-
-            <TransactionModal
-                isOpen={isTransactionOpen}
-                onClose={() => setIsTransactionOpen(false)}
-                onTransaction={onTransaction}
-                wallet={transactionWallet}
-                type={transactionType}
-            />
-
-            <ImportExportModal
-                isOpen={isSyncOpen}
-                onClose={() => setIsSyncOpen(false)}
-                assets={assets}
-                onImport={importAssets}
-            />
-
-            <AIAnalysisModal
-                isOpen={isAIOpen}
-                onClose={() => setIsAIOpen(false)}
-                portfolio={investments}
-            />
-        </div>
+                <AIAnalysisModal
+                    isOpen={isAIOpen}
+                    onClose={() => setIsAIOpen(false)}
+                    portfolio={investments}
+                />
+            </div>
+        </BrowserRouter>
     );
 }

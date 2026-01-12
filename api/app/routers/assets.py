@@ -15,3 +15,7 @@ def get_asset_info(symbol: str):
 @router.get("/prices")
 def get_current_prices(symbols: str):
     return finance.get_current_prices(symbols)
+
+@router.get("/news")
+def get_market_news(category: str = "general", page: int = 0):
+    return finance.get_market_news(category, page)

@@ -1,17 +1,32 @@
 import React from 'react';
-import { Briefcase, ArrowRightLeft, Plus, DatabaseBackup, Sparkles } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { Briefcase, ArrowRightLeft, Plus, DatabaseBackup, Sparkles, LayoutDashboard, Newspaper } from 'lucide-react';
 
 export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh, onOpenSync, onOpenAI }) {
     return (
         <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-indigo-500/10 p-2 rounded-lg">
-                            <Briefcase className="h-6 w-6 text-indigo-500" />
+
+                    {/* Left Side: Logo + Navigation */}
+                    <div className="flex items-center gap-8">
+                        {/* Logo */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-indigo-500/10 p-2 rounded-lg">
+                                <Briefcase className="h-6 w-6 text-indigo-500" />
+                            </div>
+                            <span className="font-bold text-xl tracking-tight">Portfolio<span className="text-indigo-500">Tracker</span></span>
                         </div>
-                        <span className="font-bold text-xl tracking-tight">Portfolio<span className="text-indigo-500">Tracker</span></span>
+
+                        {/* Navigation Links */}
+                        <NavLink
+                            to="/news"
+                            className={({ isActive }) => `flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'bg-indigo-500/10 text-indigo-400' : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'}`}
+                        >
+                            <Newspaper size={16} /> News
+                        </NavLink>
                     </div>
+
                     <div className="flex items-center gap-2">
                         <button onClick={onOpenSync} className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-all border border-slate-700 hover:border-indigo-500/50 hover:text-indigo-400">
                             <DatabaseBackup size={16} /> Sync
