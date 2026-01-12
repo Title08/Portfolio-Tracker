@@ -48,3 +48,29 @@ export const calculateTotalTHB = (list) => {
         return sum + (usdVal * item.exchangeRate);
     }, 0);
 };
+
+export const isMarketOpen = () => {
+    const now = new Date();
+
+    const getMarketTime = (zone) => {
+        const options = { timeZone: zone, hour12: false, hour: '2-digit', minute: '2-digit', weekday: 'short' };
+        const parts = new Intl.DateTimeFormat('en-US', options).formatToParts(now);
+        const get = (type) => parts.find(p => p.type === type).value;
+
+        const h = parseInt(get('hour'), 10);
+        const m = parseInt(get('minute'), 10);
+        const day = get('weekday'); // Mon, Tue...
+
+        return { minutes: h * 60 + m, day };
+    };
+
+    // US Market (NYSE): Mon-Fri 09:30 (570) - 16:00 (960) America/New_York
+    const us = getMarketTime('America/New_York');
+    const isUSOpen = !['Sat', 'Sun'].includes(us.day) && us.minutes >= 570 && us.minutes < 960;
+
+    // Thai Market (SET): Mon-Fri 10:00 (600) - 16:30 (990) Asia/Bangkok
+    const th = getMarketTime('Asia/Bangkok');
+    const isTHOpen = !['Sat', 'Sun'].includes(th.day) && th.minutes >= 600 && th.minutes < 990;
+
+    return isUSOpen || isTHOpen;
+};

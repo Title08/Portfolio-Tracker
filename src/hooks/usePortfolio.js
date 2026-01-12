@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { consolidateAssets, calculateTotalTHB, formatCurrency } from '../utils/helpers';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { consolidateAssets, calculateTotalTHB, formatCurrency, isMarketOpen } from '../utils/helpers';
 import { fetchLivePrices } from '../services/api';
 import { ASSET_DB } from '../constants/assets';
 
@@ -17,6 +17,24 @@ export function usePortfolio() {
     useEffect(() => {
         localStorage.setItem('myPortfolio_v7', JSON.stringify(assets));
     }, [assets]);
+
+    // --- Auto Refresh Logic ---
+    useEffect(() => {
+        const checkAndRefresh = async () => {
+            if (isMarketOpen()) {
+                console.log("Market is Open: Auto-refreshing prices...");
+                await refreshPrices();
+            }
+        };
+
+        // Initial check on mount
+        checkAndRefresh();
+
+        // Interval every 60 seconds
+        const intervalId = setInterval(checkAndRefresh, 60000);
+
+        return () => clearInterval(intervalId);
+    }, []); // Empty dependency array: runs on mount and sets up interval
 
     const investments = assets.filter(a => a.category === 'Investment');
     const usdWallets = assets.filter(a => a.category === 'Wallet' && a.currency === 'USD');
