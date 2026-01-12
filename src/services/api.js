@@ -47,3 +47,50 @@ export const getAssetInfo = async (symbol) => {
         return null;
     }
 };
+
+// --- News API ---
+export const fetchNews = async (category, page) => {
+    const response = await fetch(`${API_BASE_URL}/news?category=${category}&page=${page}`);
+    if (!response.ok) throw new Error('Failed to fetch news');
+    return await response.json();
+};
+
+export const analyzeNews = async (payload) => {
+    const response = await fetch(`${API_BASE_URL}/news/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || "Analysis failed");
+    }
+    return await response.json();
+};
+
+export const analyzeArticle = async (payload) => {
+    const response = await fetch(`${API_BASE_URL}/news/analyze/article`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || "Analysis failed");
+    }
+    return await response.json();
+};
+
+// --- Portfolio Analysis API ---
+export const analyzePortfolio = async (payload) => {
+    const response = await fetch(`${API_BASE_URL}/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || "Analysis failed");
+    }
+    return await response.json();
+};

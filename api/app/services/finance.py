@@ -150,9 +150,15 @@ def get_market_news(category: str = "general", page: int = 0):
                         # Link resolution
                         link = content.get('link')
                         ctu = content.get('clickThroughUrl')
+                        can = content.get('canonicalUrl')
+                        
                         if not link:
                             if isinstance(ctu, dict): link = ctu.get('url')
                             elif isinstance(ctu, str): link = ctu
+                        
+                        if not link:
+                            if isinstance(can, dict): link = can.get('url')
+                            elif isinstance(can, str): link = can
                             
                         # Time resolution
                         # providerPublishTime is usually Unix timestamp (seconds)
@@ -179,7 +185,8 @@ def get_market_news(category: str = "general", page: int = 0):
                             "providerPublishTime": pub_time,
                             "type": item.get("type", "STORY"),
                             "thumbnail": thumb,
-                            "relatedTickers": item.get("relatedTickers", [])
+                            "relatedTickers": item.get("relatedTickers", []),
+                            "summary": content.get('summary')
                         }
             except Exception as e:
                 continue

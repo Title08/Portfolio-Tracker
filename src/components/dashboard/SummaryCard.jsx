@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts';
 import { TrendingUp, TrendingDown, DollarSign, Activity } from 'lucide-react';
 import { formatCurrency } from '../../utils/helpers';

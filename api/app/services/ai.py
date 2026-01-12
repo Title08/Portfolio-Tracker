@@ -1,13 +1,114 @@
 from groq import Groq
 from fastapi import HTTPException
 import re
-from ..models import PortfolioAnalysisRequest
+from ..models import PortfolioAnalysisRequest, NewsAnalysisRequest, ArticleAnalysisRequest
 
 import os
 
 # Configure Groq API
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY)
+
+def analyze_market_news(request: NewsAnalysisRequest):
+    news_text = ""
+    for item in request.news[:20]: # Limit to top 20 to avoid token limits
+        news_text += f"- {item.title} (Source: {item.publisher})\n"
+
+    prompt = (
+        "Analyze the following recent market news headlines and provide a brief, engaging market pulse report:\n\n"
+        f"{news_text}\n\n"
+        "Please provide a structured summary in Markdown format using the following structure:\n\n"
+        "### 🚦 Market Sentiment\n"
+        "**[Bullish/Bearish/Neutral]** - One sentence explanation.\n\n"
+        "### 🔥 Key Themes\n"
+        "- **[Topic 1]**: Brief detail.\n"
+        "- **[Topic 2]**: Brief detail.\n"
+        "- **[Topic 3]**: Brief detail.\n\n"
+        "### 📝 Executive Summary\n"
+        "A concise 3-4 sentence paragraph summarizing the overall market situation for an investor.\n\n"
+        "**Style Guidelines:**\n"
+        "- Use relevant emojis for each section and theme (e.g., 📈, 📉, 🤖, 🏦).\n"
+        "- Make it punchy and easy to read."
+    )
+
+    system_instruction = "You are a professional financial news analyst. You provide concise, high-level market summaries based on news headlines."
+    if request.language == 'th':
+        system_instruction += " IMPORTANT: You MUST output the entire response in Thai Language (ภาษาไทย). Translating technical terms is optional but the main content must be Thai."
+
+    try:
+        completion = client.chat.completions.create(
+            model=request.model or "qwen/qwen3-32b",
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.6,
+            max_tokens=1024,
+            top_p=1,
+            stream=False,
+        )
+        
+        content = completion.choices[0].message.content
+        clean_content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
+        return {"analysis": clean_content}
+        
+    except Exception as e:
+        print(f"News Analysis Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Groq API Error: {str(e)}")
+
+def analyze_article(request: ArticleAnalysisRequest):
+    item = request.article
+    base_text = f"Title: {item.title}\nPublisher: {item.publisher}\n"
+    if item.summary:
+        base_text += f"Summary Context: {item.summary}\n"
+
+    prompt = (
+        "Analyze this specific news article and provide a concise summary:\n\n"
+        f"{base_text}\n\n"
+        "Please output the response in the following Markdown format:\n\n"
+        "### 📌 Key Takeaways\n"
+        "- **Point 1**: [Detail]\n"
+        "- **Point 2**: [Detail]\n"
+        "- **Point 3**: [Detail]\n\n"
+        "### 💡 Why it matters\n"
+        "One sentence explaining the impact on investors.\n\n"
+        "**Style**: Use emojis, be brief, and make it look premium."
+    )
+
+    system_instruction = "You are a concise financial news summarizer."
+    if request.language == 'th':
+        system_instruction += " IMPORTANT: You MUST output the entire response in Thai Language (ภาษาไทย)."
+
+    try:
+        completion = client.chat.completions.create(
+            model=request.model or "qwen/qwen3-32b",
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.6,
+            max_tokens=512,
+            top_p=1,
+            stream=False,
+        )
+        content = completion.choices[0].message.content
+        clean_content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
+        return {"analysis": clean_content}
+    except Exception as e:
+        print(f"Article Analysis Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Groq API Error: {str(e)}")
 
 def analyze_portfolio(request: PortfolioAnalysisRequest):
     portfolio_summary = ""

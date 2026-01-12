@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Coins, DollarSign, ArrowDownCircle, ArrowUpCircle, Trash2 } from 'lucide-react';
 import { formatCurrency } from '../../utils/helpers';
 

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Pages
@@ -17,6 +18,7 @@ import SellModal from './components/modals/SellModal';
 import TransactionModal from './components/modals/TransactionModal';
 import ImportExportModal from './components/modals/ImportExportModal';
 import AIAnalysisModal from './components/modals/AIAnalysisModal';
+import SettingsModal from './components/modals/SettingsModal';
 
 // --- Logic/Hooks ---
 import { usePortfolio } from './hooks/usePortfolio';
@@ -72,6 +74,9 @@ export default function App() {
     // Feature Modals
     const [isSyncOpen, setIsSyncOpen] = useState(false);
     const [isAIOpen, setIsAIOpen] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [aiLanguage, setAiLanguage] = useState('en'); // 'en' or 'th'
+    const [aiModel, setAiModel] = useState('qwen/qwen3-32b'); // Default model
 
     // --- Event Handlers ---
 
@@ -166,10 +171,11 @@ export default function App() {
                             onRefresh={refreshPrices}
                             onOpenSync={() => setIsSyncOpen(true)}
                             onOpenAI={() => setIsAIOpen(true)}
+                            onOpenSettings={() => setIsSettingsOpen(true)}
                         />
                     } />
 
-                    <Route path="/news" element={<NewsPage />} />
+                    <Route path="/news" element={<NewsPage aiLanguage={aiLanguage} aiModel={aiModel} />} />
                 </Routes>
 
                 {/* --- Modals (Global) --- */}
@@ -217,6 +223,15 @@ export default function App() {
                     isOpen={isAIOpen}
                     onClose={() => setIsAIOpen(false)}
                     portfolio={investments}
+                />
+
+                <SettingsModal
+                    isOpen={isSettingsOpen}
+                    onClose={() => setIsSettingsOpen(false)}
+                    aiLanguage={aiLanguage}
+                    setAiLanguage={setAiLanguage}
+                    aiModel={aiModel}
+                    setAiModel={setAiModel}
                 />
             </div>
         </BrowserRouter>

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { TrendingUp, ShoppingCart, DollarSign, Trash2 } from 'lucide-react';
 import { formatCurrency } from '../../utils/helpers';
 

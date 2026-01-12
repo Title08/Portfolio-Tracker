@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, Search, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, AlertCircle } from 'lucide-react';
 import { formatCurrency } from '../../utils/helpers';
 import { ASSET_DB } from '../../constants/assets';
 import SymbolSearch from '../common/SymbolSearch';

@@ -1,8 +1,7 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Briefcase, ArrowRightLeft, Plus, DatabaseBackup, Sparkles, LayoutDashboard, Newspaper } from 'lucide-react';
+import { Briefcase, ArrowRightLeft, Plus, DatabaseBackup, Sparkles, Newspaper, Settings } from 'lucide-react';
 
-export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh, onOpenSync, onOpenAI }) {
+export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh, onOpenSync, onOpenAI, onOpenSettings }) {
     return (
         <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,6 +41,9 @@ export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh, onOpenSyn
                         </button>
                         <button onClick={onOpenAdd} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
                             <Plus size={18} /> Add Item
+                        </button>
+                        <button onClick={onOpenSettings} className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
+                            <Settings size={20} />
                         </button>
                     </div>
                 </div>

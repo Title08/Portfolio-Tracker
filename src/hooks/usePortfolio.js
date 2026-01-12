@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { consolidateAssets, calculateTotalTHB, formatCurrency, isMarketOpen } from '../utils/helpers';
 import { fetchLivePrices } from '../services/api';
 import { ASSET_DB } from '../constants/assets';
@@ -34,7 +34,8 @@ export function usePortfolio() {
         const intervalId = setInterval(checkAndRefresh, 60000);
 
         return () => clearInterval(intervalId);
-    }, []); // Empty dependency array: runs on mount and sets up interval
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Intentional: Run on mount and set up interval, refreshPrices should not trigger re-runs
 
     const investments = assets.filter(a => a.category === 'Investment');
     const usdWallets = assets.filter(a => a.category === 'Wallet' && a.currency === 'USD');

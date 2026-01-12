@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Navbar from '../components/layout/Navbar';
 
 import SummaryCard from '../components/dashboard/SummaryCard';
@@ -23,7 +23,8 @@ const DashboardPage = ({
     onOpenAdd,
     onRefresh,
     onOpenSync,
-    onOpenAI
+    onOpenAI,
+    onOpenSettings
 }) => {
     return (
         <div className="min-h-screen bg-slate-900 pb-20">
@@ -33,6 +34,7 @@ const DashboardPage = ({
                 onRefresh={onRefresh}
                 onOpenSync={onOpenSync}
                 onOpenAI={onOpenAI}
+                onOpenSettings={onOpenSettings}
             />
 
             <div className="max-w-[1920px] mx-auto p-4 md:p-6 space-y-6">

@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Newspaper, ExternalLink, ArrowLeft, Layout } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { Newspaper, ExternalLink, ArrowLeft, Layout, Sparkles, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import NewsAnalysisModal from '../components/modals/NewsAnalysisModal';
+import { fetchNews, analyzeNews, analyzeArticle } from '../services/api';
 
 /**
  * News Page Component
- * 
- * Displays market news in a 3-column "Facebook-style" layout.
- * - Left: Vertical Navigation
- * - Center: News Feed
- * - Right: Empty (Reserved)
+ * Fetches and displays financial news from the backend
  */
-export default function NewsPage() {
+const NewsPage = ({ aiLanguage = 'en', aiModel = 'qwen/qwen3-32b' }) => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -19,8 +17,68 @@ export default function NewsPage() {
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
 
+    // AI Analysis State
+    const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiAnalysis, setAiAnalysis] = useState(null);
+    const [aiError, setAiError] = useState(null);
+
+    const handleAnalyze = async () => {
+        setAiLoading(true);
+        setAiError(null);
+        setAiAnalysis(null);
+
+        try {
+            const payload = {
+                news: news.map(item => ({
+                    title: item.title,
+                    publisher: item.publisher || "Unknown",
+                    link: item.link
+                })),
+                language: aiLanguage,
+                model: aiModel
+            };
+
+            const data = await analyzeNews(payload);
+            setAiAnalysis(data.analysis);
+        } catch (err) {
+            console.error("AI Error:", err);
+            setAiError(err.message);
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
+    const handleAnalyzeArticle = async (article) => {
+        setIsAIModalOpen(true);
+        setAiLoading(true);
+        setAiError(null);
+        setAiAnalysis(null);
+
+        try {
+            const payload = {
+                article: {
+                    title: article.title,
+                    publisher: article.publisher || "Unknown",
+                    link: article.link,
+                    summary: article.summary
+                },
+                language: aiLanguage,
+                model: aiModel
+            };
+
+            const data = await analyzeArticle(payload);
+            setAiAnalysis(data.analysis);
+        } catch (err) {
+            console.error("AI Error:", err);
+            setAiError(err.message);
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
     // Ref for the scrollable main container
-    const mainScrollRef = React.useRef(null);
+    const mainScrollRef = useRef(null);
 
     // Categories Configuration
     const CATEGORIES = [
@@ -30,25 +88,19 @@ export default function NewsPage() {
         { id: 'crypto', label: 'Crypto', icon: Layout },
     ];
 
-    const fetchNews = async (category, pageNum, append = false) => {
+    const fetchNewsData = async (category, pageNum, append = false) => {
         try {
             if (!append) setLoading(true);
             else setLoadingMore(true);
 
-            const response = await fetch(`http://localhost:8000/news?category=${category}&page=${pageNum}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch news');
-            }
-            const data = await response.json();
+            const data = await fetchNews(category, pageNum);
 
-            // If empty, no more data
             if (data.length === 0) {
                 setHasMore(false);
             } else {
                 setHasMore(true);
                 setNews(prev => {
                     if (append) {
-                        // Deduplicate logic
                         const existingIds = new Set(prev.map(n => n.id || n.title));
                         const newItems = data.filter(n => !existingIds.has(n.id || n.title));
                         return [...prev, ...newItems];
@@ -65,22 +117,19 @@ export default function NewsPage() {
         }
     };
 
-    // Initial load & Category change
     useEffect(() => {
-        // Scroll the main container to top
         if (mainScrollRef.current) {
             mainScrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         }
         setPage(0);
         setHasMore(true);
-        fetchNews(activeCategory, 0, false);
+        fetchNewsData(activeCategory, 0, false);
     }, [activeCategory]);
 
-    // Load More Handler
     const handleLoadMore = () => {
         const nextPage = page + 1;
         setPage(nextPage);
-        fetchNews(activeCategory, nextPage, true);
+        fetchNewsData(activeCategory, nextPage, true);
     };
 
     // Infinite Scroll Listener (attached to main container)
@@ -106,7 +155,8 @@ export default function NewsPage() {
                 container.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [loading, loadingMore, hasMore, page, activeCategory]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, loadingMore, hasMore, page, activeCategory]); // handleLoadMore excluded intentionally
 
 
     // Format date helper (Fixed)
@@ -177,11 +227,20 @@ export default function NewsPage() {
                     className="flex-1 h-full overflow-y-auto scrollbar-hide relative"
                 >
                     <div className="max-w-[700px] mx-auto p-4 md:px-8 md:pt-8 md:pb-4">
-                        <div className="mb-6">
-                            <h1 className="text-xl font-bold text-white mb-1">
-                                {CATEGORIES.find(c => c.id === activeCategory)?.label || 'Market'} News
-                            </h1>
-                            <p className="text-sm text-slate-400">Real-time updates from global sources</p>
+                        <div className="mb-6 flex justify-between items-end">
+                            <div>
+                                <h1 className="text-xl font-bold text-white mb-1">
+                                    {CATEGORIES.find(c => c.id === activeCategory)?.label || 'Market'} News
+                                </h1>
+                                <p className="text-sm text-slate-400">Real-time updates from global sources</p>
+                            </div>
+                            <button
+                                onClick={() => { setIsAIModalOpen(true); handleAnalyze(); }}
+                                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-sm font-medium shadow-lg shadow-emerald-500/20 transition-all hover:scale-105"
+                            >
+                                <Sparkles className="w-4 h-4" />
+                                <span className="hidden sm:inline">Summarize with AI</span>
+                            </button>
                         </div>
 
 
@@ -231,14 +290,22 @@ export default function NewsPage() {
                                                 {item.title}
                                             </h2>
 
-                                            <a
-                                                href={item.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 mt-2 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
-                                            >
-                                                Read full story <ExternalLink className="w-4 h-4" />
-                                            </a>
+                                            <div className="flex items-center gap-4 mt-3">
+                                                <a
+                                                    href={item.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
+                                                >
+                                                    Read full story <ExternalLink className="w-3 h-3" />
+                                                </a>
+                                                <button
+                                                    onClick={() => handleAnalyzeArticle(item)}
+                                                    className="inline-flex items-center gap-1 text-xs font-medium text-purple-400 hover:text-purple-300 transition-colors"
+                                                >
+                                                    <FileText className="w-3 h-3" /> Summarize
+                                                </button>
+                                            </div>
                                         </div>
                                     </article>
                                 ))}
@@ -260,12 +327,22 @@ export default function NewsPage() {
                 </main>
 
 
-                {/* --- Right Sidebar (Empty/Future) --- */}
                 <aside className="hidden xl:block w-[360px] p-4 h-full shrink-0">
                     {/* Empty for now as requested */}
                 </aside>
 
             </div>
+
+            <NewsAnalysisModal
+                isOpen={isAIModalOpen}
+                onClose={() => setIsAIModalOpen(false)}
+                loading={aiLoading}
+                analysis={aiAnalysis}
+                error={aiError}
+                onAnalyze={handleAnalyze}
+            />
         </div>
     );
 }
+
+export default NewsPage;

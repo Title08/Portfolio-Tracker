@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Sparkles, AlertTriangle, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { analyzePortfolio as analyzePortfolioAPI } from '../../services/api';
 
 const AIAnalysisModal = ({ isOpen, onClose, portfolio }) => {
     const [selectedMode, setSelectedMode] = useState('The Balanced');
@@ -16,7 +17,7 @@ const AIAnalysisModal = ({ isOpen, onClose, portfolio }) => {
         }
     }, [isOpen]);
 
-    const analyzePortfolio = async () => {
+    const handleAnalyze = async () => {
         setLoading(true);
         setError(null);
         setAnalysis(null);
@@ -36,21 +37,7 @@ const AIAnalysisModal = ({ isOpen, onClose, portfolio }) => {
                 mode: selectedMode
             };
 
-            const response = await fetch('http://localhost:8000/analyze', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Analysis API Error:", errorData);
-                throw new Error(errorData.detail ? JSON.stringify(errorData.detail) : 'Failed to analyze portfolio');
-            }
-
-            const data = await response.json();
+            const data = await analyzePortfolioAPI(payload);
             setAnalysis(data.analysis);
         } catch (err) {
             console.error(err);
@@ -109,8 +96,8 @@ const AIAnalysisModal = ({ isOpen, onClose, portfolio }) => {
                                             key={mode}
                                             onClick={() => setSelectedMode(mode)}
                                             className={`p-3 rounded-lg border text-left transition-all ${selectedMode === mode
-                                                    ? 'bg-purple-500/20 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.3)]'
-                                                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-gray-200'
+                                                ? 'bg-purple-500/20 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.3)]'
+                                                : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-gray-200'
                                                 }`}
                                         >
                                             {mode}
@@ -119,7 +106,7 @@ const AIAnalysisModal = ({ isOpen, onClose, portfolio }) => {
                                 </div>
                             </div>
                             <button
-                                onClick={analyzePortfolio}
+                                onClick={handleAnalyze}
                                 className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl font-bold shadow-lg shadow-purple-500/25 transition-all transform hover:scale-105"
                             >
                                 Start Analysis
@@ -137,7 +124,7 @@ const AIAnalysisModal = ({ isOpen, onClose, portfolio }) => {
                                     </div>
                                 )}
                                 <button
-                                    onClick={analyzePortfolio}
+                                    onClick={handleAnalyze}
                                     className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-colors"
                                 >
                                     Try Again
