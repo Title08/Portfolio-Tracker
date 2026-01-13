@@ -65,7 +65,7 @@ const AIAnalysisModal = ({ isOpen, onClose, portfolio, aiLanguage = 'en', aiMode
                         </div>
                         <div>
                             <h2 className="text-xl font-bold text-white tracking-tight">AI Portfolio Analysis</h2>
-                            <p className="text-xs text-gray-400">Powered by Groq (Qwen 3)</p>
+                            <p className="text-xs text-gray-400">Powered by Groq ({aiModel.split('/').pop()})</p>
                         </div>
                     </div>
                     <button

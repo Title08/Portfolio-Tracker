@@ -1,35 +1,31 @@
 import { X, Globe, Settings as SettingsIcon, Check, Cpu, ChevronDown } from 'lucide-react';
 
-// Complete list of Groq API models
+// Verified Groq API Chat Models (January 2026)
 const AI_MODELS = [
-    // Qwen Models
+    // Qwen
     { id: 'qwen/qwen3-32b', name: 'Qwen 3 32B', category: 'Qwen' },
 
-    // Llama Models
-    { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile', category: 'Meta Llama' },
-    { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant', category: 'Meta Llama' },
-    { id: 'llama3-70b-8192', name: 'Llama 3 70B', category: 'Meta Llama' },
-    { id: 'llama3-8b-8192', name: 'Llama 3 8B', category: 'Meta Llama' },
+    // Meta Llama 4 (NEW)
+    { id: 'meta-llama/llama-4-maverick-17b-128e-instruct', name: 'Llama 4 Maverick 17B', category: 'Meta Llama 4' },
+    { id: 'meta-llama/llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout 17B', category: 'Meta Llama 4' },
 
-    // OpenAI OSS Models
+    // Meta Llama 3
+    { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile', category: 'Meta Llama 3' },
+    { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant', category: 'Meta Llama 3' },
+
+    // OpenAI OSS
     { id: 'openai/gpt-oss-120b', name: 'GPT OSS 120B', category: 'OpenAI OSS' },
     { id: 'openai/gpt-oss-20b', name: 'GPT OSS 20B', category: 'OpenAI OSS' },
 
-    // Mixtral Models
-    { id: 'mixtral-8x7b-32768', name: 'Mixtral 8x7B', category: 'Mistral' },
+    // Moonshot
+    { id: 'moonshotai/kimi-k2-instruct', name: 'Kimi K2 Instruct', category: 'Moonshot' },
 
-    // Gemma Models
-    { id: 'gemma-7b-it', name: 'Gemma 7B IT', category: 'Google' },
-    { id: 'gemma2-9b-it', name: 'Gemma 2 9B IT', category: 'Google' },
+    // Groq Compound
+    { id: 'groq/compound', name: 'Groq Compound', category: 'Groq' },
+    { id: 'groq/compound-mini', name: 'Groq Compound Mini', category: 'Groq' },
 
-    // DeepSeek Models
-    { id: 'deepseek-r1-distill-llama-70b', name: 'DeepSeek R1 Distill 70B', category: 'DeepSeek' },
-
-    // Moonshot Models
-    { id: 'moonshotai/kimi-k2-instruct-0905', name: 'Kimi K2 Instruct', category: 'Moonshot' },
-
-    // Compound/Agents
-    { id: 'groq/compound', name: 'Groq Compound (Multi-tool)', category: 'Groq' },
+    // Other
+    { id: 'allam-2-7b', name: 'Allam 2 7B', category: 'Other' },
 ];
 
 const SettingsModal = ({ isOpen, onClose, aiLanguage, setAiLanguage, aiModel, setAiModel }) => {
