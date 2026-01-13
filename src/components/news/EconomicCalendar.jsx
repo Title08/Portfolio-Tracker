@@ -180,7 +180,9 @@ const EconomicCalendar = () => {
                     <div className="space-y-2">
                         {selectedEvent.events.map((event, idx) => (
                             <div key={idx} className="flex items-start gap-2 bg-slate-800/60 rounded-lg p-2">
-                                <span className="text-sm">{event.impact === 'high' ? '🔴' : '🟡'}</span>
+                                <div className={`flex flex-col items-center justify-center min-w-[32px] gap-0.5 rounded px-1 py-1 ${event.impact === 'high' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                                    <span className="text-[10px] font-bold uppercase">{event.impact === 'high' ? 'High' : 'Med'}</span>
+                                </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs font-semibold text-white truncate">{event.title}</p>
                                     <p className="text-[10px] text-slate-400 truncate">{event.description}</p>

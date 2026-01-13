@@ -4,6 +4,7 @@ yfinance
 requests
 pandas
 lxml
-pandas
-lxml
 groq
+beautifulsoup4
+tradingeconomics
+websocket-client

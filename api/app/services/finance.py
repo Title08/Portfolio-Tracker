@@ -234,53 +234,207 @@ def get_mini_chart(symbol: str):
 
 def get_economic_calendar():
     """
-    Get upcoming economic events from a curated calendar.
-    Returns events for the next 30 days.
+    Fetch upcoming economic events with caching and fallback.
+    Strategy:
+    1. Check local cache (valid for 12 hours)
+    2. Scrape ForexFactory
+    3. Fallback to hardcoded data
     """
+    import json
+    import os
+    import time
     from datetime import datetime, timedelta
     
-    # Curated economic calendar for 2025-2026
-    # Format: (month, day, year, title, impact, country, description)
+    CACHE_FILE = "economic_calendar_cache.json"
+    CACHE_DURATION = 12 * 60 * 60  # 12 hours in seconds
+    
+    # 1. Try Cache
+    try:
+        if os.path.exists(CACHE_FILE):
+            file_mod_time = os.path.getmtime(CACHE_FILE)
+            if time.time() - file_mod_time < CACHE_DURATION:
+                with open(CACHE_FILE, 'r') as f:
+                    cached_data = json.load(f)
+                    # Return all cached data (including history)
+                    print(f"Using cached economic calendar ({len(cached_data)} events)")
+                    return cached_data[:500]
+    except Exception as e:
+        print(f"Cache read error: {e}")
+
+    # 2. Try Scraping ForexFactory
+    try:
+        events = scrape_forexfactory()
+        if events:
+            # Save to cache
+            try:
+                with open(CACHE_FILE, 'w') as f:
+                    json.dump(events, f)
+            except Exception as e:
+                print(f"Cache write error: {e}")
+                
+            return events[:200]
+    except Exception as e:
+        print(f"Scraping failed: {e}")
+
+    # 3. Fallback
+    print("Using fallback economic calendar")
+    return get_economic_calendar_fallback()
+
+def scrape_forexfactory():
+    """
+    Scrape economic calendar from ForexFactory for extended range.
+    Range: Last 1 month + Next 3 months (Total 4 months)
+    """
+    import requests
+    from bs4 import BeautifulSoup
+    from datetime import datetime, timedelta
+    import time
+    
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5"
+    }
+    
+    all_events = []
+    
+    # Generate list of 7 months: Last 3 + Current + Next 3
+    today = datetime.now()
+    months_to_scrape = []
+    
+    # helper to add months
+    def add_months(d, x):
+        new_year = d.year + (d.month + x - 1) // 12
+        new_month = (d.month + x - 1) % 12 + 1
+        return datetime(new_year, new_month, 1)
+
+    # Scrape 7 months total (from 3 months ago)
+    start_date = add_months(today, -3)
+    for i in range(7):
+        target_date = add_months(start_date, i)
+        month_str = target_date.strftime("%b.%Y").lower() # e.g., oct.2025
+        months_to_scrape.append((month_str, target_date.year))
+        
+    print(f"Scraping months: {[m[0] for m in months_to_scrape]}")
+
+    for month_str, year in months_to_scrape:
+        try:
+            url = f"https://www.forexfactory.com/calendar?month={month_str}"
+            print(f"Fetching {url}...")
+            
+            response = requests.get(url, headers=headers, timeout=15)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            # Parse this month's table
+            rows = soup.select('tr.calendar__row')
+            
+            current_date_str = None
+            
+            for row in rows:
+                # Check for new day
+                date_cell = row.select_one('.calendar__date')
+                if date_cell:
+                    d_text = date_cell.get_text(strip=True)
+                    if d_text:
+                        # Format: "SunJan 12" -> "Jan 12"
+                        try:
+                            clean_date = d_text[3:].strip()
+                            date_obj = datetime.strptime(f"{clean_date} {year}", "%b %d %Y")
+                            current_date_str = date_obj.strftime("%Y-%m-%d")
+                            current_date_display = date_obj.strftime("%b %d")
+                            current_weekday = date_obj.strftime("%a")
+                        except:
+                            pass
+                
+                if not current_date_str:
+                    continue
+                    
+                currency_el = row.select_one('.calendar__currency')
+                if not currency_el or currency_el.get_text(strip=True) != 'USD':
+                    continue
+                    
+                # Impact
+                impact = 'low'
+                impact_el = row.select_one('.calendar__impact span')
+                if impact_el:
+                     classes = str(impact_el.get('class', []))
+                     if 'red' in classes: impact = 'high'
+                     elif 'ora' in classes: impact = 'medium'
+                     
+                if impact == 'low': continue
+                
+                # Title
+                title_el = row.select_one('.calendar__event-title')
+                title = title_el.get_text(strip=True) if title_el else ""
+                
+                # Forecast/Prev/Actual
+                forecast_el = row.select_one('.calendar__forecast')
+                prev_el = row.select_one('.calendar__previous')
+                actual_el = row.select_one('.calendar__actual')
+                
+                forecast = forecast_el.get_text(strip=True) if forecast_el else ""
+                prev = prev_el.get_text(strip=True) if prev_el else ""
+                actual = actual_el.get_text(strip=True) if actual_el else ""
+                
+                # Format description
+                desc_parts = []
+                if actual: desc_parts.append(f"Act: {actual}")
+                if forecast: desc_parts.append(f"Est: {forecast}")
+                if prev: desc_parts.append(f"Prev: {prev}")
+                
+                description = " | ".join(desc_parts)
+
+                # Avoid duplicates if any
+                event_data = {
+                    "date": current_date_str,
+                    "dateDisplay": current_date_display,
+                    "weekday": current_weekday,
+                    "title": title,
+                    "impact": impact,
+                    "country": "US",
+                    "description": description
+                }
+                
+                all_events.append(event_data)
+            
+            # Delay to be safe, but not after the last one
+            if month_str != months_to_scrape[-1][0]:
+                time.sleep(2.0)
+                
+        except Exception as e:
+            print(f"Error scraping {month_str}: {e}")
+            continue
+            
+    return all_events
+
+
+def get_economic_calendar_fallback():
+    """Fallback hardcoded economic calendar data."""
+    from datetime import datetime, timedelta
+    
     ECONOMIC_EVENTS = [
-        # January 2026
         (1, 10, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
-        (1, 14, 2026, "PPI Report", "medium", "US", "Producer Price Index"),
         (1, 15, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        (1, 28, 2026, "FOMC Meeting", "high", "US", "Federal Reserve Interest Rate Decision"),
-        (1, 29, 2026, "FOMC Statement", "high", "US", "Fed Chair Press Conference"),
-        (1, 30, 2026, "GDP Report", "high", "US", "Q4 GDP Advance Estimate"),
-        # February 2026
+        (1, 28, 2026, "FOMC Meeting", "high", "US", "Fed Rate Decision"),
+        (1, 30, 2026, "GDP Report", "high", "US", "Q4 GDP Advance"),
         (2, 7, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
         (2, 12, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        (2, 13, 2026, "PPI Report", "medium", "US", "Producer Price Index"),
-        (2, 27, 2026, "PCE Inflation", "high", "US", "Core PCE Price Index"),
-        # March 2026
+        (2, 27, 2026, "PCE Inflation", "high", "US", "Core PCE Index"),
         (3, 6, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
         (3, 12, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        (3, 17, 2026, "FOMC Meeting", "high", "US", "Federal Reserve Interest Rate Decision"),
-        (3, 18, 2026, "FOMC Statement", "high", "US", "Fed Chair Press Conference"),
+        (3, 17, 2026, "FOMC Meeting", "high", "US", "Fed Rate Decision"),
         (3, 27, 2026, "GDP Report", "high", "US", "Q4 GDP Final"),
-        # April 2026
         (4, 3, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
         (4, 10, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
         (4, 30, 2026, "GDP Report", "high", "US", "Q1 GDP Advance"),
-        # May 2026
-        (5, 1, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
-        (5, 5, 2026, "FOMC Meeting", "high", "US", "Federal Reserve Interest Rate Decision"),
-        (5, 6, 2026, "FOMC Statement", "high", "US", "Fed Chair Press Conference"),
-        (5, 13, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        # June 2026
-        (6, 5, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
-        (6, 11, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        (6, 16, 2026, "FOMC Meeting", "high", "US", "Federal Reserve Interest Rate Decision"),
-        (6, 17, 2026, "FOMC Statement", "high", "US", "Fed Chair Press Conference"),
     ]
     
     today = datetime.now()
-    end_date = today + timedelta(days=30)
+    end_date = today + timedelta(days=90)
     
     upcoming_events = []
-    
     for month, day, year, title, impact, country, description in ECONOMIC_EVENTS:
         try:
             event_date = datetime(year, month, day)
@@ -297,7 +451,6 @@ def get_economic_calendar():
         except ValueError:
             continue
     
-    # Sort by date
     upcoming_events.sort(key=lambda x: x["date"])
-    
     return upcoming_events
+
