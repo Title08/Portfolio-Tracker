@@ -44,6 +44,8 @@ export default function App() {
         totalUsdWalletTHB,
         totalThbWalletTHB,
         grandTotalTHB,
+        history,
+        totalDailyChangePercent,
 
         // Actions
         refreshPrices,
@@ -158,6 +160,8 @@ export default function App() {
                             totalUsdWalletTHB={totalUsdWalletTHB}
                             totalThbWalletTHB={totalThbWalletTHB}
                             investmentStats={investmentStats}
+                            history={history}
+                            dailyChangePercent={totalDailyChangePercent}
                             thbWallets={thbWallets}
                             usdWallets={usdWallets}
                             investments={investments}

@@ -78,18 +78,42 @@ def get_current_prices(symbols_str: str):
                 ticker = tickers.tickers[symbol]
                 if hasattr(ticker, 'fast_info'):
                     price = ticker.fast_info.last_price
+                    prev_close = ticker.fast_info.previous_close
+                    
                     if price:
-                        prices[symbol] = price
+                        change = price - prev_close if prev_close else 0
+                        change_percent = (change / prev_close * 100) if prev_close else 0
+                        
+                        prices[symbol] = {
+                            "price": price,
+                            "change": change,
+                            "changePercent": change_percent,
+                            "previousClose": prev_close
+                        }
                         continue
                 
-                hist = ticker.history(period="1d")
+                # Fallback to history if fast_info fails
+                hist = ticker.history(period="2d")
                 if not hist.empty:
-                    prices[symbol] = hist['Close'].iloc[-1]
+                    price = hist['Close'].iloc[-1]
+                    prev_close = hist['Close'].iloc[0] if len(hist) > 1 else price
+                    
+                    change = price - prev_close
+                    change_percent = (change / prev_close * 100) if prev_close else 0
+                    
+                    prices[symbol] = {
+                        "price": price,
+                        "change": change,
+                        "changePercent": change_percent,
+                        "previousClose": prev_close
+                    }
                 else:
-                    prices[symbol] = ticker.info.get('currentPrice', 0)
+                    # Absolute fallback
+                    price = ticker.info.get('currentPrice', 0)
+                    prices[symbol] = { "price": price, "change": 0, "changePercent": 0, "previousClose": price }
             except Exception as e:
                 print(f"Error fetching {symbol}: {e}")
-                prices[symbol] = 0
+                prices[symbol] = { "price": 0, "change": 0, "changePercent": 0, "previousClose": 0 }
         return prices
     except Exception as e:
         print(f"Batch fetch error: {e}")
@@ -257,7 +281,8 @@ def get_economic_calendar():
                     cached_data = json.load(f)
                     # Return all cached data (including history)
                     print(f"Using cached economic calendar ({len(cached_data)} events)")
-                    return cached_data[:500]
+                    return cached_data
+
     except Exception as e:
         print(f"Cache read error: {e}")
 
@@ -272,7 +297,7 @@ def get_economic_calendar():
             except Exception as e:
                 print(f"Cache write error: {e}")
                 
-            return events[:200]
+            return events
     except Exception as e:
         print(f"Scraping failed: {e}")
 
@@ -317,6 +342,8 @@ def scrape_forexfactory():
         
     print(f"Scraping months: {[m[0] for m in months_to_scrape]}")
 
+    target_currencies = {'USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY'}
+
     for month_str, year in months_to_scrape:
         try:
             url = f"https://www.forexfactory.com/calendar?month={month_str}"
@@ -331,6 +358,9 @@ def scrape_forexfactory():
             rows = soup.select('tr.calendar__row')
             
             current_date_str = None
+            current_date_display = None
+            current_weekday = None
+            last_seen_time = "All Day" # Default if no time found
             
             for row in rows:
                 # Check for new day
@@ -345,14 +375,25 @@ def scrape_forexfactory():
                             current_date_str = date_obj.strftime("%Y-%m-%d")
                             current_date_display = date_obj.strftime("%b %d")
                             current_weekday = date_obj.strftime("%a")
+                            # Reset time for new day? No, usually time flows, but good to be safe
                         except:
                             pass
                 
                 if not current_date_str:
                     continue
-                    
+
+                # Extract Time
+                time_cell = row.select_one('.calendar__time')
+                if time_cell:
+                    t_text = time_cell.get_text(strip=True)
+                    if t_text:
+                        last_seen_time = t_text
+                
+                # Check Currency
                 currency_el = row.select_one('.calendar__currency')
-                if not currency_el or currency_el.get_text(strip=True) != 'USD':
+                currency = currency_el.get_text(strip=True) if currency_el else ""
+                
+                if currency not in target_currencies:
                     continue
                     
                 # Impact
@@ -363,7 +404,8 @@ def scrape_forexfactory():
                      if 'red' in classes: impact = 'high'
                      elif 'ora' in classes: impact = 'medium'
                      
-                if impact == 'low': continue
+                # if impact == 'low': continue # Update: keep all impacts for these currencies if needed, or filter?
+                # Let's keep minimal filter: keep all for selected currencies to allow frontend filtering
                 
                 # Title
                 title_el = row.select_one('.calendar__event-title')
@@ -391,9 +433,11 @@ def scrape_forexfactory():
                     "date": current_date_str,
                     "dateDisplay": current_date_display,
                     "weekday": current_weekday,
+                    "time": last_seen_time,
+                    "currency": currency,
                     "title": title,
                     "impact": impact,
-                    "country": "US",
+                    "country": currency[:2] if currency != 'EUR' else 'EU', # Rough country code
                     "description": description
                 }
                 
@@ -415,27 +459,31 @@ def get_economic_calendar_fallback():
     from datetime import datetime, timedelta
     
     ECONOMIC_EVENTS = [
-        (1, 10, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
-        (1, 15, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        (1, 28, 2026, "FOMC Meeting", "high", "US", "Fed Rate Decision"),
-        (1, 30, 2026, "GDP Report", "high", "US", "Q4 GDP Advance"),
-        (2, 7, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
-        (2, 12, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        (2, 27, 2026, "PCE Inflation", "high", "US", "Core PCE Index"),
-        (3, 6, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
-        (3, 12, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        (3, 17, 2026, "FOMC Meeting", "high", "US", "Fed Rate Decision"),
-        (3, 27, 2026, "GDP Report", "high", "US", "Q4 GDP Final"),
-        (4, 3, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls"),
-        (4, 10, 2026, "CPI Release", "high", "US", "Consumer Price Index"),
-        (4, 30, 2026, "GDP Report", "high", "US", "Q1 GDP Advance"),
+        (1, 10, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls", "8:30am"),
+        (1, 13, 2026, "Core CPI m/m", "high", "US", "Consumer Price Index", "8:30pm"),
+        (1, 13, 2026, "CPI m/m", "high", "US", "Consumer Price Index", "8:30pm"),
+        (1, 13, 2026, "CPI y/y", "high", "US", "Consumer Price Index", "8:30pm"),
+        (1, 13, 2026, "New Home Sales", "medium", "US", "Sales of new single-family homes", "10:00pm"),
+        (1, 15, 2026, "CPI Release", "high", "US", "Consumer Price Index", "8:30am"),
+        (1, 28, 2026, "FOMC Meeting", "high", "US", "Fed Rate Decision", "2:00pm"),
+        (1, 30, 2026, "GDP Report", "high", "US", "Q4 GDP Advance", "8:30am"),
+        (2, 7, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls", "8:30am"),
+        (2, 12, 2026, "CPI Release", "high", "US", "Consumer Price Index", "8:30am"),
+        (2, 27, 2026, "PCE Inflation", "high", "US", "Core PCE Index", "8:30am"),
+        (3, 6, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls", "8:30am"),
+        (3, 12, 2026, "CPI Release", "high", "US", "Consumer Price Index", "8:30am"),
+        (3, 17, 2026, "FOMC Meeting", "high", "US", "Fed Rate Decision", "2:00pm"),
+        (3, 27, 2026, "GDP Report", "high", "US", "Q4 GDP Final", "8:30am"),
+        (4, 3, 2026, "Jobs Report", "high", "US", "Non-Farm Payrolls", "8:30am"),
+        (4, 10, 2026, "CPI Release", "high", "US", "Consumer Price Index", "8:30am"),
+        (4, 30, 2026, "GDP Report", "high", "US", "Q1 GDP Advance", "8:30am"),
     ]
     
     today = datetime.now()
     end_date = today + timedelta(days=90)
     
     upcoming_events = []
-    for month, day, year, title, impact, country, description in ECONOMIC_EVENTS:
+    for month, day, year, title, impact, country, description, time_str in ECONOMIC_EVENTS:
         try:
             event_date = datetime(year, month, day)
             if today <= event_date <= end_date:
@@ -443,6 +491,8 @@ def get_economic_calendar_fallback():
                     "date": event_date.strftime("%Y-%m-%d"),
                     "dateDisplay": event_date.strftime("%b %d"),
                     "weekday": event_date.strftime("%a"),
+                    "time": time_str,
+                    "currency": "USD",
                     "title": title,
                     "impact": impact,
                     "country": country,

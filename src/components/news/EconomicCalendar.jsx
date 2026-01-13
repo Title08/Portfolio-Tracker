@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, AlertCircle, Clock, Filter } from 'lucide-react';
 import { getEconomicCalendar } from '../../services/api';
 
 /**
@@ -12,6 +12,10 @@ const EconomicCalendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedEvent, setSelectedEvent] = useState(null);
 
+    // Filters
+    const [filterImpact, setFilterImpact] = useState('all'); // all, high, medium, low
+    const [filterCurrency, setFilterCurrency] = useState('all'); // all, USD, EUR, etc.
+
     useEffect(() => {
         const fetchCalendar = async () => {
             setLoading(true);
@@ -21,6 +25,13 @@ const EconomicCalendar = () => {
         };
         fetchCalendar();
     }, []);
+
+    // Filter events
+    const filteredEvents = events.filter(event => {
+        if (filterImpact !== 'all' && event.impact !== filterImpact) return false;
+        if (filterCurrency !== 'all' && event.currency !== filterCurrency) return false;
+        return true;
+    });
 
     // Calendar navigation
     const goToPrevMonth = () => {
@@ -49,12 +60,15 @@ const EconomicCalendar = () => {
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const dayEvents = events.filter(e => e.date === dateStr);
+        // Use filteredEvents here so the dots match the filter
+        const dayEvents = filteredEvents.filter(e => e.date === dateStr);
         calendarDays.push({ day, dateStr, events: dayEvents });
     }
 
     const getImpactColor = (impact) => {
-        return impact === 'high' ? 'bg-red-500' : 'bg-yellow-500';
+        if (impact === 'high') return 'bg-red-500';
+        if (impact === 'medium') return 'bg-orange-500';
+        return 'bg-yellow-500'; // Low
     };
 
     const isToday = (dateStr) => {
@@ -63,24 +77,59 @@ const EconomicCalendar = () => {
     };
 
     const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const currencies = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY'];
 
     return (
         <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden">
             {/* Header */}
             <div className="p-4 border-b border-slate-700/50 bg-gradient-to-r from-amber-900/20 to-orange-900/20">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg shadow-lg shadow-amber-500/20">
-                        <Calendar className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                        <h3 className="text-base font-bold text-white">Economic Calendar</h3>
-                        <p className="text-[10px] text-slate-400">Upcoming market events</p>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg shadow-lg shadow-amber-500/20">
+                            <Calendar className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                            <h3 className="text-base font-bold text-white">Economic Calendar</h3>
+                            <p className="text-[10px] text-slate-400">Upcoming market events</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            {/* Filters */}
+            <div className="px-4 py-2 border-b border-slate-700/30 flex gap-2 overflow-x-auto no-scrollbar items-center">
+                <div className="flex items-center gap-1 text-slate-400 mr-2">
+                    <Filter className="w-3 h-3" />
+                    <span className="text-[10px] uppercase font-bold">Filters</span>
+                </div>
+
+                {/* Impact Filter */}
+                <select
+                    value={filterImpact}
+                    onChange={(e) => setFilterImpact(e.target.value)}
+                    className="bg-slate-700/50 text-slate-300 text-[10px] rounded px-2 py-1 border border-slate-600 outline-none focus:border-indigo-500"
+                >
+                    <option value="all">All Impact</option>
+                    <option value="high">High Impact</option>
+                    <option value="medium">Medium Impact</option>
+                    <option value="low">Low Impact</option>
+                </select>
+
+                {/* Currency Filter */}
+                <select
+                    value={filterCurrency}
+                    onChange={(e) => setFilterCurrency(e.target.value)}
+                    className="bg-slate-700/50 text-slate-300 text-[10px] rounded px-2 py-1 border border-slate-600 outline-none focus:border-indigo-500"
+                >
+                    <option value="all">All Currencies</option>
+                    {currencies.map(c => (
+                        <option key={c} value={c}>{c}</option>
+                    ))}
+                </select>
+            </div>
+
             {/* Month Navigation */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700/30">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-slate-700/30 bg-slate-800/20">
                 <button
                     onClick={goToPrevMonth}
                     className="p-1 rounded hover:bg-slate-700/50 text-slate-400 hover:text-white transition-colors"
@@ -129,7 +178,7 @@ const EconomicCalendar = () => {
                                     className={`
                                         relative min-h-[42px] rounded-lg p-1 text-center transition-colors
                                         ${cell.day ? 'hover:bg-slate-700/50 cursor-pointer' : ''}
-                                        ${isToday(cell.dateStr) ? 'bg-indigo-500/20 ring-1 ring-indigo-500/50' : ''}
+                                        ${cell.day && isToday(cell.dateStr) ? 'bg-indigo-500/20 ring-1 ring-indigo-500/50' : ''}
                                         ${cell.events.length > 0 ? 'bg-slate-700/30' : ''}
                                     `}
                                     onClick={() => cell.events.length > 0 && setSelectedEvent(cell)}
@@ -146,7 +195,7 @@ const EconomicCalendar = () => {
                                                         <div
                                                             key={i}
                                                             className={`w-1.5 h-1.5 rounded-full ${getImpactColor(event.impact)}`}
-                                                            title={event.title}
+                                                            title={`${event.title} (${event.currency})`}
                                                         />
                                                     ))}
                                                     {cell.events.length > 3 && (
@@ -177,15 +226,37 @@ const EconomicCalendar = () => {
                             Close
                         </button>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1 custom-scrollbar">
                         {selectedEvent.events.map((event, idx) => (
                             <div key={idx} className="flex items-start gap-2 bg-slate-800/60 rounded-lg p-2">
-                                <div className={`flex flex-col items-center justify-center min-w-[32px] gap-0.5 rounded px-1 py-1 ${event.impact === 'high' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
-                                    <span className="text-[10px] font-bold uppercase">{event.impact === 'high' ? 'High' : 'Med'}</span>
+                                {/* Impact Badge */}
+                                <div className={`flex flex-col items-center justify-center min-w-[36px] gap-0.5 rounded px-1 py-1 ${event.impact === 'high' ? 'bg-red-500/20 text-red-400' : event.impact === 'medium' ? 'bg-orange-500/20 text-orange-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                                    <span className="text-[9px] font-bold uppercase">{event.impact === 'high' ? 'High' : event.impact === 'medium' ? 'Med' : 'Low'}</span>
                                 </div>
+
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-semibold text-white truncate">{event.title}</p>
-                                    <p className="text-[10px] text-slate-400 truncate">{event.description}</p>
+                                    <div className="flex items-center gap-2 mb-0.5">
+                                        {/* Time & Currency */}
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="inline-flex items-center gap-0.5 text-[10px] text-slate-400 font-mono bg-slate-900/50 px-1 rounded">
+                                                <Clock className="w-2.5 h-2.5" />
+                                                {event.time || '--:--'}
+                                            </span>
+                                            <span className={`text-[10px] font-bold px-1 rounded ${event.currency === 'USD' ? 'text-green-400 bg-green-400/10' : 'text-blue-400 bg-blue-400/10'}`}>
+                                                {event.currency || 'USD'}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <p className="text-xs font-semibold text-white truncate text-wrap leading-tight">{event.title}</p>
+
+                                    {event.description && (
+                                        <div className="mt-1 flex flex-wrap gap-x-2 gap-y-0.5 text-[10px] text-slate-400">
+                                            {event.description.split('|').map((part, i) => (
+                                                <span key={i} className="bg-slate-700/50 px-1 rounded">{part.trim()}</span>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -194,13 +265,16 @@ const EconomicCalendar = () => {
             )}
 
             {/* Legend */}
-            <div className="p-3 border-t border-slate-700/50 bg-slate-900/30">
-                <div className="flex items-center justify-center gap-4 text-[10px] text-slate-500">
+            <div className="p-2 border-t border-slate-700/50 bg-slate-900/30">
+                <div className="flex items-center justify-center gap-3 text-[9px] text-slate-500">
                     <span className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-red-500" /> High Impact
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500" /> High
                     </span>
                     <span className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500" /> Medium
+                        <span className="w-1.5 h-1.5 rounded-full bg-orange-500" /> Med
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-500" /> Low
                     </span>
                 </div>
             </div>

@@ -1,10 +1,7 @@
-fastapi
-uvicorn
-yfinance
-requests
-pandas
-lxml
-groq
-beautifulsoup4
-tradingeconomics
-websocket-client
+fastapi>=0.110.0
+uvicorn>=0.27.0
+yfinance>=0.2.36
+requests>=2.31.0
+groq>=0.4.2
+beautifulsoup4>=4.12.3
+python-dotenv>=1.0.1

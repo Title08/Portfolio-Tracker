@@ -4,6 +4,7 @@ import { fetchLivePrices } from '../services/api';
 import { ASSET_DB } from '../constants/assets';
 
 export function usePortfolio() {
+    // 1. Base State
     const [assets, setAssets] = useState(() => {
         const saved = localStorage.getItem('myPortfolio_v7');
         let initialAssets = saved ? JSON.parse(saved) : [
@@ -14,29 +15,25 @@ export function usePortfolio() {
         return consolidateAssets(initialAssets);
     });
 
+    const [history, setHistory] = useState(() => {
+        try {
+            const saved = localStorage.getItem('portfolioHistory_v1');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            return [];
+        }
+    });
+
+    // 2. Persist State Effects
     useEffect(() => {
         localStorage.setItem('myPortfolio_v7', JSON.stringify(assets));
     }, [assets]);
 
-    // --- Auto Refresh Logic ---
     useEffect(() => {
-        const checkAndRefresh = async () => {
-            if (isMarketOpen()) {
-                console.log("Market is Open: Auto-refreshing prices...");
-                await refreshPrices();
-            }
-        };
+        localStorage.setItem('portfolioHistory_v1', JSON.stringify(history));
+    }, [history]);
 
-        // Initial check on mount
-        checkAndRefresh();
-
-        // Interval every 60 seconds
-        const intervalId = setInterval(checkAndRefresh, 60000);
-
-        return () => clearInterval(intervalId);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Intentional: Run on mount and set up interval, refreshPrices should not trigger re-runs
-
+    // 3. Derived State (Moved UP to avoid TDZ in effects)
     const investments = assets.filter(a => a.category === 'Investment');
     const usdWallets = assets.filter(a => a.category === 'Wallet' && a.currency === 'USD');
     const thbWallets = assets.filter(a => a.category === 'Wallet' && a.currency === 'THB');
@@ -46,12 +43,76 @@ export function usePortfolio() {
     const totalThbWalletTHB = calculateTotalTHB(thbWallets);
     const grandTotalTHB = totalInvTHB + totalUsdWalletTHB + totalThbWalletTHB;
 
-    // --- Statistics Calculation ---
+    // 4. Helper Actions (Hoisted for use in Effects)
+    const refreshPrices = async () => {
+        const prices = await fetchLivePrices(assets);
+        if (!prices) {
+            console.error("Failed to fetch prices");
+            return;
+        }
+
+        const updatedAssets = assets.map(asset => {
+            if (asset.category === 'Investment') {
+                const dbEntry = ASSET_DB[asset.symbol];
+                const lookupKey = dbEntry && dbEntry.yfSymbol ? dbEntry.yfSymbol : asset.symbol;
+
+                const priceData = prices[lookupKey];
+
+                if (priceData && typeof priceData === 'object') {
+                    return {
+                        ...asset,
+                        marketPrice: priceData.price,
+                        marketChange: priceData.change,
+                        marketChangePercent: priceData.changePercent,
+                        previousClose: priceData.previousClose
+                    };
+                }
+                else if (typeof priceData === 'number' && priceData > 0) {
+                    return { ...asset, marketPrice: priceData };
+                }
+            }
+            return asset;
+        });
+        setAssets(updatedAssets);
+    };
+
+    // 5. Effects using Derived State and Actions
+
+    // Auto Refresh Logic
+    useEffect(() => {
+        const checkAndRefresh = async () => {
+            if (isMarketOpen()) {
+                await refreshPrices();
+            }
+        };
+        checkAndRefresh();
+        const intervalId = setInterval(checkAndRefresh, 15000);
+        return () => clearInterval(intervalId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Update History on Value Change
+    useEffect(() => {
+        if (grandTotalTHB > 0) {
+            setHistory(prev => {
+                const now = Date.now();
+                const newPoint = { timestamp: now, value: grandTotalTHB };
+
+                // Limit history length
+                const updated = [...prev, newPoint];
+                if (updated.length > 50) return updated.slice(updated.length - 50);
+                return updated;
+            });
+        }
+    }, [grandTotalTHB]);
+
+    // 6. Complex Stats Calculation
     const investmentStats = useMemo(() => {
         let totalCost = 0;
         let totalMarketVal = 0;
         let bestAsset = null;
         let worstAsset = null;
+        let totalDailyChange = 0;
 
         investments.forEach(asset => {
             const cost = asset.price * asset.quantity;
@@ -59,6 +120,10 @@ export function usePortfolio() {
             const marketVal = marketPrice * asset.quantity;
             const pnl = marketVal - cost;
             const pnlPercent = cost > 0 ? (pnl / cost) * 100 : 0;
+
+            if (asset.marketChange) {
+                totalDailyChange += (asset.marketChange * asset.quantity);
+            }
 
             totalCost += cost;
             totalMarketVal += marketVal;
@@ -74,40 +139,22 @@ export function usePortfolio() {
         const totalPnL = totalMarketVal - totalCost;
         const totalPnLPercent = totalCost > 0 ? (totalPnL / totalCost) * 100 : 0;
 
+        const totalPreviousVal = totalMarketVal - totalDailyChange;
+        const totalDailyChangePercent = totalPreviousVal > 0 ? (totalDailyChange / totalPreviousVal) * 100 : 0;
+
         return {
             totalCost,
             totalMarketVal,
             totalPnL,
             totalPnLPercent,
             bestAsset,
-            worstAsset
+            worstAsset,
+            totalDailyChange,
+            totalDailyChangePercent
         };
     }, [investments]);
 
-    // --- Actions ---
-
-    const refreshPrices = async () => {
-        const prices = await fetchLivePrices(assets);
-        if (!prices) {
-            alert("Failed to fetch prices. Ensure the Python API is running.");
-            return;
-        }
-
-        const updatedAssets = assets.map(asset => {
-            if (asset.category === 'Investment') {
-                const dbEntry = ASSET_DB[asset.symbol];
-                const lookupKey = dbEntry && dbEntry.yfSymbol ? dbEntry.yfSymbol : asset.symbol;
-
-                const newPrice = prices[lookupKey];
-                if (newPrice && newPrice > 0) {
-                    return { ...asset, marketPrice: newPrice };
-                }
-            }
-            return asset;
-        });
-        setAssets(updatedAssets);
-    };
-
+    // 7. User Actions
     const addAsset = (newAssetData, type, setError) => {
         if (!newAssetData.name || !newAssetData.quantity) return;
 
@@ -177,12 +224,11 @@ export function usePortfolio() {
                 // Use the manually entered exchange rate
                 asset.exchangeRate = parseFloat(newAssetData.exchangeRate);
                 if (isNaN(asset.exchangeRate) || asset.exchangeRate <= 0) {
-                    // Fallback or Error? Modal enforces it, but safe to default or check
                     asset.exchangeRate = 35.0;
                 }
             }
 
-            // MERGE LOGIC (Run for both Wallet and No-Wallet flows)
+            // MERGE LOGIC
             const existingStockIndex = updatedAssets.findIndex(a => a.symbol === asset.symbol && a.category === 'Investment');
 
             if (existingStockIndex >= 0) {
@@ -298,7 +344,7 @@ export function usePortfolio() {
             if (a.id === sellData.id) {
                 return { ...a, quantity: a.quantity - sellQty };
             }
-            return a;
+            return asset;
         }).filter(a => a.quantity > 0);
 
         updatedAssets.push({
@@ -350,12 +396,10 @@ export function usePortfolio() {
             if (!Array.isArray(parsed)) {
                 throw new Error("Invalid data format: Expected an array.");
             }
-            // Basic validation: Check if items have id
             const isValid = parsed.every(item => item.id && item.name);
             if (!isValid) {
                 throw new Error("Invalid data: Items missing required fields (id, name).");
             }
-
             setAssets(parsed);
             return { success: true };
         } catch (error) {
@@ -374,6 +418,8 @@ export function usePortfolio() {
         totalThbWalletTHB,
         grandTotalTHB,
         investmentStats,
+        history,
+        totalDailyChangePercent: investmentStats.totalDailyChangePercent,
         refreshPrices,
         addAsset,
         exchangeCurrency,

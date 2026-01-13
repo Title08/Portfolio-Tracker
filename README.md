@@ -6,15 +6,16 @@ A modern, high-fidelity portfolio tracking application built with React, Tailwin
 
 ### Core
 -   **Asset Tracking**: Track Stocks, Crypto, and Cash (USD/THB).
--   **Real-time Prices**: Live price updates via Yahoo Finance.
+-   **Real-time Prices**: Live price updates (15s interval) via Yahoo Finance with daily percentage change.
 -   **Smart Autocomplete**: Instantly recognizes 500+ stocks (S&P 500, Nasdaq 100, Dow Jones) and autofills details.
+-   **Economic Calendar**: Real-time economic events from ForexFactory with currency filtering and impact levels.
 -   **Indices & ETFs**: Track major market indices (`^GSPC`, `^NDX`, `^DJI`) and their ETFs directly.
 -   **Sector & Industry**: Automatic tagging of assets for better diversification visibility.
 -   **Multi-Currency**: Seamlessly handle USD investments and THB local currency.
 -   **Exchange**: Simulate currency exchanges between wallets.
 -   **Sync & Backup**: Manual Import/Export of portfolio data (JSON) for cross-device usage.
--   **Visualizations**: Clean, responsive UI with dark mode aesthetics.
--   **Dashboard Statistics**: Comprehensive overview of Net Worth, Total Cost, and PnL.
+-   **Visualizations**: Clean, responsive UI with Line Charts (Performance), Pie Charts (Allocation), and dark mode.
+-   **Dashboard Statistics**: Comprehensive overview of Net Worth, Total Cost, PnL, and Daily Change.
 -   **Persistence**: Remembers your preferred external exchange rates automatically.
 
 ### AI Features

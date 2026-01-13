@@ -4,6 +4,7 @@ import Navbar from '../components/layout/Navbar';
 import SummaryCard from '../components/dashboard/SummaryCard';
 import WalletList from '../components/dashboard/WalletList';
 import InvestmentTable from '../components/dashboard/InvestmentTable';
+import MiniEconomicCalendar from '../components/dashboard/MiniEconomicCalendar';
 
 const DashboardPage = ({
     grandTotalTHB,
@@ -11,6 +12,8 @@ const DashboardPage = ({
     totalUsdWalletTHB,
     totalThbWalletTHB,
     investmentStats,
+    history,
+    dailyChangePercent,
     thbWallets,
     usdWallets,
     investments,
@@ -45,6 +48,8 @@ const DashboardPage = ({
                     usdWalletTotal={totalUsdWalletTHB}
                     thbWalletTotal={totalThbWalletTHB}
                     stats={investmentStats}
+                    history={history}
+                    dailyChangePercent={dailyChangePercent}
                 />
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
@@ -67,6 +72,7 @@ const DashboardPage = ({
                             onWithdraw={(item) => openTransactionModal('WITHDRAW', item)}
                             onDelete={(id) => deleteAsset(id)}
                         />
+                        <MiniEconomicCalendar />
                     </div>
 
                     <div className="lg:col-span-9 xl:col-span-9">

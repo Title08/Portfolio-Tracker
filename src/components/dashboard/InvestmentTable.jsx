@@ -20,6 +20,7 @@ export default function InvestmentTable({ investments, totalValue, onBuyMore, on
                             <th className="px-2 py-3 font-semibold text-right">Qty</th>
                             <th className="px-2 py-3 font-semibold text-right">Avg Price</th>
                             <th className="px-2 py-3 font-semibold text-right">Price ($)</th>
+                            <th className="px-2 py-3 font-semibold text-right">1D %</th>
                             <th className="px-2 py-3 font-semibold text-right">Val (USD)</th>
                             <th className="px-2 py-3 font-semibold text-right">PnL ($)</th>
                             <th className="px-2 py-3 font-semibold text-right">PnL (%)</th>
@@ -29,7 +30,7 @@ export default function InvestmentTable({ investments, totalValue, onBuyMore, on
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-700">
-                        {investments.length === 0 ? (<tr><td colSpan="10" className="p-12 text-center text-slate-500 italic">No investments yet.</td></tr>) : (
+                        {investments.length === 0 ? (<tr><td colSpan="11" className="p-12 text-center text-slate-500 italic">No investments yet.</td></tr>) : (
                             investments.map((asset) => {
                                 const costBasis = asset.price * asset.quantity;
                                 const marketPrice = asset.marketPrice || asset.price;
@@ -38,6 +39,8 @@ export default function InvestmentTable({ investments, totalValue, onBuyMore, on
                                 const pnlPercent = costBasis > 0 ? (pnlUSD / costBasis) * 100 : 0;
                                 const isProfit = pnlUSD >= 0;
                                 const pnlColor = isProfit ? 'text-emerald-400' : 'text-red-400';
+                                const dayChange = asset.marketChangePercent || 0;
+                                const dayChangeColor = dayChange >= 0 ? 'text-emerald-400' : 'text-red-400';
 
                                 return (
                                     <tr key={asset.id} className="hover:bg-slate-700/30 transition-colors group">
@@ -53,6 +56,9 @@ export default function InvestmentTable({ investments, totalValue, onBuyMore, on
                                         <td className="px-2 py-3 text-right text-white font-mono font-medium">{asset.quantity.toFixed(4)}</td>
                                         <td className="px-2 py-3 text-right text-slate-400 font-mono text-sm">{formatCurrency(asset.price)}</td>
                                         <td className="px-2 py-3 text-right text-white font-mono text-sm">{formatCurrency(marketPrice)}</td>
+                                        <td className={`px-2 py-3 text-right font-mono text-sm ${dayChangeColor}`}>
+                                            {dayChange > 0 ? '+' : ''}{dayChange.toFixed(2)}%
+                                        </td>
                                         <td className="px-2 py-3 text-right text-slate-200 font-mono font-medium">{formatCurrency(costBasis)}</td>
                                         <td className={`px-2 py-3 text-right font-mono font-medium ${pnlColor}`}>
                                             {pnlUSD > 0 ? '+' : ''}{formatCurrency(pnlUSD)}
