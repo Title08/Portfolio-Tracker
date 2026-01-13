@@ -148,13 +148,17 @@ def analyze_portfolio(request: PortfolioAnalysisRequest):
         "- Format the response in clear Markdown."
     )
 
+    system_instruction = "You are an expert financial advisor using Warren Buffett and Ray Dalio principles. You strictly outputs Markdown tables for data comparisons."
+    if request.language == 'th':
+        system_instruction += " IMPORTANT: You MUST output the entire response in Thai Language (ภาษาไทย). Translating technical terms is optional but the main content must be Thai."
+
     try:
         completion = client.chat.completions.create(
-            model="qwen/qwen3-32b",
+            model=request.model or "qwen/qwen3-32b",
             messages=[
                 {
                     "role": "system",
-                    "content": "You are an expert financial advisor using Warren Buffett and Ray Dalio principles. You strictly outputs Markdown tables for data comparisons."
+                    "content": system_instruction
                 },
                 {
                     "role": "user",
@@ -175,3 +179,4 @@ def analyze_portfolio(request: PortfolioAnalysisRequest):
     except Exception as e:
         print(f"AI Analysis Error: {e}")
         raise HTTPException(status_code=500, detail=f"Groq API Error: {str(e)}")
+

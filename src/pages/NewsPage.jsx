@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import { Newspaper, ExternalLink, ArrowLeft, Layout, Sparkles, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import NewsAnalysisModal from '../components/modals/NewsAnalysisModal';
+import TickerTag from '../components/common/TickerTag';
+import EconomicCalendar from '../components/news/EconomicCalendar';
 import { fetchNews, analyzeNews, analyzeArticle } from '../services/api';
 
 /**
@@ -290,6 +292,15 @@ const NewsPage = ({ aiLanguage = 'en', aiModel = 'qwen/qwen3-32b' }) => {
                                                 {item.title}
                                             </h2>
 
+                                            {/* Related Tickers */}
+                                            {item.relatedTickers && item.relatedTickers.length > 0 && (
+                                                <div className="flex flex-wrap gap-1.5 mb-3">
+                                                    {item.relatedTickers.slice(0, 5).map((ticker) => (
+                                                        <TickerTag key={ticker} symbol={ticker} />
+                                                    ))}
+                                                </div>
+                                            )}
+
                                             <div className="flex items-center gap-4 mt-3">
                                                 <a
                                                     href={item.link}
@@ -327,8 +338,8 @@ const NewsPage = ({ aiLanguage = 'en', aiModel = 'qwen/qwen3-32b' }) => {
                 </main>
 
 
-                <aside className="hidden xl:block w-[360px] p-4 h-full shrink-0">
-                    {/* Empty for now as requested */}
+                <aside className="hidden xl:block w-[360px] p-4 h-full shrink-0 overflow-y-auto">
+                    <EconomicCalendar />
                 </aside>
 
             </div>

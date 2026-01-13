@@ -28,3 +28,17 @@ def analyze_news(request: NewsAnalysisRequest):
 @router.post("/news/analyze/article")
 def analyze_article(request: ArticleAnalysisRequest):
     return ai.analyze_article(request)
+
+@router.get("/mini-chart")
+def get_mini_chart(symbol: str):
+    """Get mini chart data for ticker tooltip (price, change, sparkline)"""
+    result = finance.get_mini_chart(symbol)
+    if result is None:
+        return {"error": "Could not fetch data", "symbol": symbol}
+    return result
+
+@router.get("/economic-calendar")
+def get_economic_calendar():
+    """Get upcoming economic events"""
+    return finance.get_economic_calendar()
+

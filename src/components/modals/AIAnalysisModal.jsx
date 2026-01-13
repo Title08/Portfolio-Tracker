@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { analyzePortfolio as analyzePortfolioAPI } from '../../services/api';
 
-const AIAnalysisModal = ({ isOpen, onClose, portfolio }) => {
+const AIAnalysisModal = ({ isOpen, onClose, portfolio, aiLanguage = 'en', aiModel = 'qwen/qwen3-32b' }) => {
     const [selectedMode, setSelectedMode] = useState('The Balanced');
     const [loading, setLoading] = useState(false);
     const [analysis, setAnalysis] = useState(null);
@@ -34,7 +34,9 @@ const AIAnalysisModal = ({ isOpen, onClose, portfolio }) => {
                     sector: asset.sector || "Unknown",
                     industry: asset.industry || "Unknown"
                 })),
-                mode: selectedMode
+                mode: selectedMode,
+                language: aiLanguage,
+                model: aiModel
             };
 
             const data = await analyzePortfolioAPI(payload);

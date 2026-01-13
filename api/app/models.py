@@ -14,6 +14,8 @@ class PortfolioItem(BaseModel):
 class PortfolioAnalysisRequest(BaseModel):
     portfolio: List[PortfolioItem]
     mode: Optional[str] = "The Balanced"
+    language: Optional[str] = "en"
+    model: Optional[str] = "qwen/qwen3-32b"
 
 class NewsItem(BaseModel):
     title: str

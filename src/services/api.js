@@ -94,3 +94,29 @@ export const analyzePortfolio = async (payload) => {
     }
     return await response.json();
 };
+
+// --- Mini Chart API ---
+export const getMiniChart = async (symbol) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/mini-chart?symbol=${encodeURIComponent(symbol)}`);
+        if (!response.ok) return null;
+        const data = await response.json();
+        if (data.error) return null;
+        return data;
+    } catch (error) {
+        console.error("Mini chart error:", error);
+        return null;
+    }
+};
+
+// --- Economic Calendar API ---
+export const getEconomicCalendar = async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/economic-calendar`);
+        if (!response.ok) return [];
+        return await response.json();
+    } catch (error) {
+        console.error("Economic calendar error:", error);
+        return [];
+    }
+};

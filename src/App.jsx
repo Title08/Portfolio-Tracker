@@ -223,6 +223,8 @@ export default function App() {
                     isOpen={isAIOpen}
                     onClose={() => setIsAIOpen(false)}
                     portfolio={investments}
+                    aiLanguage={aiLanguage}
+                    aiModel={aiModel}
                 />
 
                 <SettingsModal
