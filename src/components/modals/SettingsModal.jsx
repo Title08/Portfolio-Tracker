@@ -39,54 +39,54 @@ const SettingsModal = ({ isOpen, onClose, aiLanguage, setAiLanguage, aiModel, se
     }, {});
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-[#1e1e1e] rounded-xl border border-white/10 w-full max-w-md shadow-2xl">
+        <div className="fixed inset-0 bg-black/60 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-[#1e1e1e] rounded-xl border border-slate-200 dark:border-white/10 w-full max-w-md shadow-2xl transition-colors">
 
                 {/* Header */}
-                <div className="p-6 border-b border-white/10 flex justify-between items-center bg-slate-800/50 rounded-t-xl">
+                <div className="p-6 border-b border-slate-100 dark:border-white/10 flex justify-between items-center bg-gray-50 dark:bg-slate-800/50 rounded-t-xl">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-slate-700/50 rounded-lg">
-                            <SettingsIcon className="w-5 h-5 text-gray-300" />
+                        <div className="p-2 bg-slate-200 dark:bg-slate-700/50 rounded-lg">
+                            <SettingsIcon className="w-5 h-5 text-slate-600 dark:text-gray-300" />
                         </div>
-                        <h2 className="text-lg font-bold text-white">Settings</h2>
+                        <h2 className="text-lg font-bold text-slate-900 dark:text-white">Settings</h2>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-400 hover:text-white"
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-slate-600 dark:hover:text-white"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Content */}
-                <div className="p-6 space-y-6">
+                <div className="p-6 space-y-6 bg-white dark:bg-transparent">
 
                     {/* AI Model Dropdown */}
                     <div>
                         <div className="flex items-center gap-2 mb-3">
-                            <Cpu className="w-4 h-4 text-purple-400" />
-                            <h3 className="text-sm font-semibold text-gray-200">AI Model</h3>
+                            <Cpu className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                            <h3 className="text-sm font-semibold text-slate-700 dark:text-gray-200">AI Model</h3>
                         </div>
 
                         <div className="relative">
                             <select
                                 value={aiModel}
                                 onChange={(e) => setAiModel(e.target.value)}
-                                className="w-full p-3 pr-10 rounded-lg border border-white/10 bg-slate-800/80 text-white text-sm font-medium appearance-none cursor-pointer focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+                                className="w-full p-3 pr-10 rounded-lg border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-white text-sm font-medium appearance-none cursor-pointer focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all shadow-sm dark:shadow-none"
                             >
                                 {Object.entries(groupedModels).map(([category, models]) => (
-                                    <optgroup key={category} label={category} className="bg-slate-800 text-gray-400">
+                                    <optgroup key={category} label={category} className="bg-white dark:bg-slate-800 text-slate-500 dark:text-gray-400 font-bold">
                                         {models.map((model) => (
-                                            <option key={model.id} value={model.id} className="bg-slate-800 text-white py-2">
+                                            <option key={model.id} value={model.id} className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white py-2 font-normal">
                                                 {model.name}
                                             </option>
                                         ))}
                                     </optgroup>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-gray-400 pointer-events-none" />
                         </div>
-                        <p className="mt-2 text-xs text-gray-500">
+                        <p className="mt-2 text-xs text-slate-500 dark:text-gray-500">
                             Different models have varying speed and quality tradeoffs.
                         </p>
                     </div>
@@ -94,31 +94,31 @@ const SettingsModal = ({ isOpen, onClose, aiLanguage, setAiLanguage, aiModel, se
                     {/* Language Setting */}
                     <div>
                         <div className="flex items-center gap-2 mb-3">
-                            <Globe className="w-4 h-4 text-indigo-400" />
-                            <h3 className="text-sm font-semibold text-gray-200">AI Language</h3>
+                            <Globe className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                            <h3 className="text-sm font-semibold text-slate-700 dark:text-gray-200">AI Language</h3>
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
                             <button
                                 onClick={() => setAiLanguage('en')}
                                 className={`relative p-3 rounded-lg border text-left transition-all flex items-center justify-between ${aiLanguage === 'en'
-                                    ? 'bg-indigo-600/20 border-indigo-500 text-white'
-                                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
+                                    ? 'bg-indigo-50 border-indigo-500 text-indigo-700 dark:bg-indigo-600/20 dark:border-indigo-500 dark:text-white shadow-sm'
+                                    : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-white/10'
                                     }`}
                             >
                                 <span className="text-sm font-medium">English 🇺🇸</span>
-                                {aiLanguage === 'en' && <Check className="w-4 h-4 text-indigo-400" />}
+                                {aiLanguage === 'en' && <Check className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />}
                             </button>
 
                             <button
                                 onClick={() => setAiLanguage('th')}
                                 className={`relative p-3 rounded-lg border text-left transition-all flex items-center justify-between ${aiLanguage === 'th'
-                                    ? 'bg-indigo-600/20 border-indigo-500 text-white'
-                                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
+                                    ? 'bg-indigo-50 border-indigo-500 text-indigo-700 dark:bg-indigo-600/20 dark:border-indigo-500 dark:text-white shadow-sm'
+                                    : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-white/10'
                                     }`}
                             >
                                 <span className="text-sm font-medium">Thai 🇹🇭</span>
-                                {aiLanguage === 'th' && <Check className="w-4 h-4 text-indigo-400" />}
+                                {aiLanguage === 'th' && <Check className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />}
                             </button>
                         </div>
                     </div>
@@ -126,7 +126,7 @@ const SettingsModal = ({ isOpen, onClose, aiLanguage, setAiLanguage, aiModel, se
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-white/10 bg-slate-800/30 rounded-b-xl flex justify-end">
+                <div className="p-4 border-t border-slate-100 dark:border-white/10 bg-gray-50 dark:bg-slate-800/30 rounded-b-xl flex justify-end">
                     <button
                         onClick={onClose}
                         className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"

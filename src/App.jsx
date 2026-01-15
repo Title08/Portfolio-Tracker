@@ -147,7 +147,7 @@ export default function App() {
     // --- Render ---
     return (
         <BrowserRouter>
-            <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-emerald-500 selection:text-white">
+            <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-300">
                 {/* Navigation Bar */}
                 {/* Navigation Bar Removed from Global Layout */}
 

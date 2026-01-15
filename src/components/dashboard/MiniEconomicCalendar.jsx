@@ -51,22 +51,22 @@ export default function MiniEconomicCalendar() {
     if (events.length === 0) return null; // Don't show if empty
 
     return (
-        <div className="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
-            <div className="p-4 border-b border-slate-700 flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-300 shadow-sm dark:shadow-none">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between bg-slate-50 dark:bg-slate-800 transition-colors">
                 <div className="flex items-center gap-2">
-                    <Calendar size={18} className="text-emerald-400" />
-                    <h3 className="font-bold text-slate-200">Upcoming Events</h3>
+                    <Calendar size={18} className="text-emerald-600 dark:text-emerald-400" />
+                    <h3 className="font-bold text-slate-700 dark:text-slate-200">Upcoming Events</h3>
                 </div>
                 <span className="text-xs text-slate-500">Today & Tomorrow</span>
             </div>
 
-            <div className="divide-y divide-slate-700/50">
+            <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
                 {events.map((event, idx) => (
-                    <div key={idx} className="p-3 hover:bg-slate-700/30 transition-colors flex items-center justify-between group">
+                    <div key={idx} className="p-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors flex items-center justify-between group">
                         <div className="flex items-center gap-3">
-                            <div className={`w-1 h-8 rounded-full ${event.impact === 'high' ? 'bg-red-500' : event.impact === 'medium' ? 'bg-orange-500' : 'bg-slate-600'}`}></div>
+                            <div className={`w-1 h-8 rounded-full ${event.impact === 'high' ? 'bg-red-500' : event.impact === 'medium' ? 'bg-orange-500' : 'bg-slate-400 dark:bg-slate-600'}`}></div>
                             <div>
-                                <div className="font-medium text-slate-200 text-sm">{event.title}</div>
+                                <div className="font-medium text-slate-800 dark:text-slate-200 text-sm">{event.title}</div>
                                 <div className="text-xs text-slate-500 flex items-center gap-2">
                                     <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${getImpactColor(event.impact)}`}>
                                         {event.currency}
@@ -76,11 +76,11 @@ export default function MiniEconomicCalendar() {
                             </div>
                         </div>
                         <div className="text-right">
-                            <div className="text-sm font-bold text-slate-300 flex items-center gap-1 justify-end">
-                                <Clock size={12} className="text-slate-500" />
+                            <div className="text-sm font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1 justify-end">
+                                <Clock size={12} className="text-slate-400 dark:text-slate-500" />
                                 {event.time}
                             </div>
-                            <div className="text-[10px] text-slate-500 uppercase">{event.dateDisplay}</div>
+                            <div className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">{event.dateDisplay}</div>
                         </div>
                     </div>
                 ))}

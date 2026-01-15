@@ -119,44 +119,46 @@ def get_current_prices(symbols_str: str):
         print(f"Batch fetch error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-def get_market_news(category: str = "general", page: int = 0):
+def get_market_news(category: str = "general", symbol: str = None, page: int = 0):
     """
-    Fetch aggregated market news with category filtering and basic pagination simulation.
+    Fetch aggregated market news with category filtering or specific symbol.
     """
     try:
-        TICKER_SETS = {
-            "general": {
-                "primary": ["^GSPC", "^DJI", "^IXIC", "EURUSD=X"],
-                "extended": ["GC=F", "CL=F", "^TNX", "^RUT", "DX-Y.NYB", "^FTSE", "^N225"]
-            },
-            "tech": {
-                "primary": ["NVDA", "AAPL", "MSFT", "GOOGL", "AMD"],
-                "extended": ["TSLA", "META", "AMZN", "INTC", "TSM", "AVGO", "QCOM", "CRM"]
-            },
-            "finance": {
-                "primary": ["JPM", "BAC", "V", "MA", "GS"],
-                "extended": ["MS", "WFC", "C", "BLK", "AXP", "USB", "PNC", "SCHW"]
-            },
-            "crypto": {
-                "primary": ["BTC-USD", "ETH-USD", "SOL-USD", "COIN"],
-                "extended": ["BNB-USD", "XRP-USD", "ADA-USD", "DOGE-USD", "MSTR", "MARA"]
-            }
-        }
-        
-        cat_data = TICKER_SETS.get(category.lower(), TICKER_SETS["general"])
-        
-        target_tickers = []
-        if page == 0:
-            target_tickers = cat_data["primary"]
+        if symbol:
+            target_tickers = [symbol.upper()]
         else:
-            extended = cat_data["extended"]
-            chunk_size = 3
-            start_idx = (page - 1) * chunk_size
+            TICKER_SETS = {
+                "general": {
+                    "primary": ["^GSPC", "^DJI", "^IXIC", "EURUSD=X"],
+                    "extended": ["GC=F", "CL=F", "^TNX", "^RUT", "DX-Y.NYB", "^FTSE", "^N225"]
+                },
+                "tech": {
+                    "primary": ["NVDA", "AAPL", "MSFT", "GOOGL", "AMD"],
+                    "extended": ["TSLA", "META", "AMZN", "INTC", "TSM", "AVGO", "QCOM", "CRM"]
+                },
+                "finance": {
+                    "primary": ["JPM", "BAC", "V", "MA", "GS"],
+                    "extended": ["MS", "WFC", "C", "BLK", "AXP", "USB", "PNC", "SCHW"]
+                },
+                "crypto": {
+                    "primary": ["BTC-USD", "ETH-USD", "SOL-USD", "COIN"],
+                    "extended": ["BNB-USD", "XRP-USD", "ADA-USD", "DOGE-USD", "MSTR", "MARA"]
+                }
+            }
             
-            if start_idx < len(extended):
-                target_tickers = extended[start_idx : start_idx + chunk_size]
+            cat_data = TICKER_SETS.get(category.lower(), TICKER_SETS["general"])
+            
+            if page == 0:
+                target_tickers = cat_data["primary"]
             else:
-                return []
+                extended = cat_data["extended"]
+                chunk_size = 3
+                start_idx = (page - 1) * chunk_size
+                
+                if start_idx < len(extended):
+                    target_tickers = extended[start_idx : start_idx + chunk_size]
+                else:
+                    return []
 
         if not target_tickers:
             return []

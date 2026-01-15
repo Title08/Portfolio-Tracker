@@ -30,7 +30,7 @@ const DashboardPage = ({
     onOpenSettings
 }) => {
     return (
-        <div className="min-h-screen bg-slate-900 pb-20">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-20 transition-colors duration-300">
             <Navbar
                 onOpenExchange={onOpenExchange}
                 onOpenAdd={onOpenAdd}

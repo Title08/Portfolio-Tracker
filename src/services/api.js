@@ -49,8 +49,12 @@ export const getAssetInfo = async (symbol) => {
 };
 
 // --- News API ---
-export const fetchNews = async (category, page) => {
-    const response = await fetch(`${API_BASE_URL}/news?category=${category}&page=${page}`);
+export const fetchNews = async (category, page, symbol = null) => {
+    let url = `${API_BASE_URL}/news?category=${category}&page=${page}`;
+    if (symbol) {
+        url += `&symbol=${encodeURIComponent(symbol)}`;
+    }
+    const response = await fetch(url);
     if (!response.ok) throw new Error('Failed to fetch news');
     return await response.json();
 };

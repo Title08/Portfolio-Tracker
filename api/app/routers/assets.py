@@ -18,8 +18,8 @@ def get_current_prices(symbols: str):
     return finance.get_current_prices(symbols)
 
 @router.get("/news")
-def get_market_news(category: str = "general", page: int = 0):
-    return finance.get_market_news(category, page)
+def get_market_news(category: str = "general", symbol: str = None, page: int = 0):
+    return finance.get_market_news(category, symbol, page)
 
 @router.post("/news/analyze")
 def analyze_news(request: NewsAnalysisRequest):
