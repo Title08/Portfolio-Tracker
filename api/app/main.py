@@ -29,5 +29,5 @@ def read_root():
     return {"status": "ok", "message": "Portfolio Tracker API is running"}
 
 # Include Routers
-app.include_router(assets.router)
+app.include_router(assets.router, prefix="/api")
 app.include_router(analysis.router)

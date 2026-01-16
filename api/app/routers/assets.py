@@ -1,7 +1,17 @@
+"""
+Assets Router
+
+API endpoints for financial data and AI services:
+- Asset search and info
+- Market news and analysis
+- AI chat and portfolio analysis
+- Economic calendar
+"""
+
 from fastapi import APIRouter
-from typing import List
+
 from ..services import finance, ai
-from ..models import NewsAnalysisRequest, ArticleAnalysisRequest
+from ..models import NewsAnalysisRequest, ArticleAnalysisRequest, ChatRequest
 
 router = APIRouter()
 
@@ -28,6 +38,11 @@ def analyze_news(request: NewsAnalysisRequest):
 @router.post("/news/analyze/article")
 def analyze_article(request: ArticleAnalysisRequest):
     return ai.analyze_article(request)
+
+@router.post("/chat")
+def chat(request: ChatRequest):
+    """Chat with AI assistant"""
+    return ai.chat(request)
 
 @router.get("/mini-chart")
 def get_mini_chart(symbol: str):

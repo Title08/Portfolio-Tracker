@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Briefcase, ArrowRightLeft, Plus, DatabaseBackup, Sparkles, Newspaper, Settings } from 'lucide-react';
+import { Briefcase, ArrowRightLeft, Plus, DatabaseBackup, Sparkles, Newspaper, Settings, MessageSquare } from 'lucide-react';
 import ThemeToggle from '../common/ThemeToggle';
 
 export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh, onOpenSync, onOpenAI, onOpenSettings }) {
@@ -24,6 +24,12 @@ export default function Navbar({ onOpenExchange, onOpenAdd, onRefresh, onOpenSyn
                             className={({ isActive }) => `flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'}`}
                         >
                             <Newspaper size={16} /> News
+                        </NavLink>
+                        <NavLink
+                            to="/chat"
+                            className={({ isActive }) => `flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'}`}
+                        >
+                            <MessageSquare size={16} /> Chat
                         </NavLink>
                     </div>
 

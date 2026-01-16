@@ -1,12 +1,31 @@
-from groq import Groq
-from fastapi import HTTPException
-import re
-from ..models import PortfolioAnalysisRequest, NewsAnalysisRequest, ArticleAnalysisRequest
+"""
+AI Service Module
+
+Provides AI-powered analysis functions using the Groq API:
+- Market news analysis
+- Article summarization
+- Portfolio analysis
+- Chat conversations
+"""
 
 import os
+import re
 
-# Configure Groq API
+from groq import Groq
+from fastapi import HTTPException
+
+from ..models import (
+    PortfolioAnalysisRequest,
+    NewsAnalysisRequest,
+    ArticleAnalysisRequest,
+    ChatRequest
+)
+
+# --- Configuration ---
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+DEFAULT_MODEL = "qwen/qwen3-32b"
+
+# Initialize Groq client
 client = Groq(api_key=GROQ_API_KEY)
 
 def analyze_market_news(request: NewsAnalysisRequest):
@@ -184,3 +203,45 @@ def analyze_portfolio(request: PortfolioAnalysisRequest):
         print(f"AI Analysis Error: {e}")
         raise HTTPException(status_code=500, detail=f"Groq API Error: {str(e)}")
 
+
+def chat(request: ChatRequest):
+    """Chat with AI assistant about investments and finance"""
+    
+    system_instruction = (
+        "You are a helpful AI financial assistant. You provide advice on investments, "
+        "market analysis, portfolio management, and financial planning. "
+        "You are knowledgeable about stocks, bonds, ETFs, crypto, and general finance. "
+        "Be concise but informative. Use markdown formatting when helpful. "
+        "If asked about specific stock picks, always include a disclaimer about doing your own research."
+    )
+    
+    if request.language == 'th':
+        system_instruction += " IMPORTANT: Respond in Thai Language (ภาษาไทย)."
+    
+    # Build message history
+    messages = [{"role": "system", "content": system_instruction}]
+    
+    # Add conversation history (last 10 messages)
+    for msg in request.history[-10:]:
+        messages.append({"role": msg.role, "content": msg.content})
+    
+    # Add current user message
+    messages.append({"role": "user", "content": request.message})
+    
+    try:
+        completion = client.chat.completions.create(
+            model=request.model or "qwen/qwen3-32b",
+            messages=messages,
+            temperature=0.7,
+            max_tokens=2048,
+            top_p=1,
+            stream=False,
+        )
+        
+        content = completion.choices[0].message.content
+        clean_content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
+        return {"response": clean_content}
+        
+    except Exception as e:
+        print(f"Chat Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Groq API Error: {str(e)}")

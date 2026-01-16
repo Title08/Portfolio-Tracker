@@ -1,17 +1,21 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { consolidateAssets, calculateTotalTHB, formatCurrency, isMarketOpen } from '../utils/helpers';
 import { fetchLivePrices } from '../services/api';
 import { ASSET_DB } from '../constants/assets';
+import { getAssets, saveAssets, getHistory, saveHistoryPoint, trimHistory, migrateFromLocalStorage } from '../utils/storage';
+
+// Default assets for new users
+const DEFAULT_ASSETS = [
+    { id: 1, name: 'Kasikorn Bank', symbol: 'KBANK', type: 'Cash', quantity: 50000, price: 1, exchangeRate: 1, currency: 'THB', category: 'Wallet' },
+    { id: 2, name: 'USD Cash', symbol: 'USD', type: 'Cash', quantity: 1000, price: 1, exchangeRate: 35.50, currency: 'USD', category: 'Wallet' },
+    { id: 3, name: 'Apple Inc.', symbol: 'AAPL', type: 'Stock', quantity: 10, price: 185.50, exchangeRate: 35.50, currency: 'USD', category: 'Investment' },
+];
 
 export function usePortfolio() {
-    // 1. Base State
+    // 1. Base State - Initialize from localStorage first (sync), then load from IndexedDB (async)
     const [assets, setAssets] = useState(() => {
         const saved = localStorage.getItem('myPortfolio_v7');
-        let initialAssets = saved ? JSON.parse(saved) : [
-            { id: 1, name: 'Kasikorn Bank', symbol: 'KBANK', type: 'Cash', quantity: 50000, price: 1, exchangeRate: 1, currency: 'THB', category: 'Wallet' },
-            { id: 2, name: 'USD Cash', symbol: 'USD', type: 'Cash', quantity: 1000, price: 1, exchangeRate: 35.50, currency: 'USD', category: 'Wallet' },
-            { id: 3, name: 'Apple Inc.', symbol: 'AAPL', type: 'Stock', quantity: 10, price: 185.50, exchangeRate: 35.50, currency: 'USD', category: 'Investment' },
-        ];
+        let initialAssets = saved ? JSON.parse(saved) : DEFAULT_ASSETS;
         return consolidateAssets(initialAssets);
     });
 
@@ -24,14 +28,59 @@ export function usePortfolio() {
         }
     });
 
-    // 2. Persist State Effects
+    const [isLoading, setIsLoading] = useState(true);
+
+    // 2. Initialize from IndexedDB (async) and migrate if needed
     useEffect(() => {
+        const initStorage = async () => {
+            try {
+                // Migrate data from localStorage to IndexedDB if needed
+                await migrateFromLocalStorage();
+
+                // Load assets from IndexedDB
+                const savedAssets = await getAssets();
+                if (savedAssets && savedAssets.length > 0) {
+                    setAssets(consolidateAssets(savedAssets));
+                }
+
+                // Load history from IndexedDB
+                const savedHistory = await getHistory();
+                if (savedHistory && savedHistory.length > 0) {
+                    setHistory(savedHistory);
+                }
+            } catch (error) {
+                console.warn('IndexedDB initialization failed, using localStorage:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        initStorage();
+    }, []);
+
+    // 3. Persist State Effects - Save to both IndexedDB and localStorage
+    useEffect(() => {
+        if (isLoading) return; // Don't save during initial load
+
+        // Save to localStorage (sync, immediate)
         localStorage.setItem('myPortfolio_v7', JSON.stringify(assets));
-    }, [assets]);
+
+        // Save to IndexedDB (async)
+        saveAssets(assets).catch(console.error);
+    }, [assets, isLoading]);
 
     useEffect(() => {
+        if (isLoading) return;
+
+        // Save to localStorage
         localStorage.setItem('portfolioHistory_v1', JSON.stringify(history));
-    }, [history]);
+
+        // Trim history in IndexedDB periodically
+        if (history.length > 50) {
+            trimHistory(50).catch(console.error);
+        }
+    }, [history, isLoading]);
+
 
     // 3. Derived State (Moved UP to avoid TDZ in effects)
     const investments = assets.filter(a => a.category === 'Investment');

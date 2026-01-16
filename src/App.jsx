@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Pages
 import DashboardPage from './pages/DashboardPage';
 import NewsPage from './pages/NewsPage';
+import ChatPage from './pages/ChatPage';
 
 // --- Components ---
 // Layout
@@ -180,6 +181,7 @@ export default function App() {
                     } />
 
                     <Route path="/news" element={<NewsPage aiLanguage={aiLanguage} aiModel={aiModel} />} />
+                    <Route path="/chat" element={<ChatPage aiLanguage={aiLanguage} aiModel={aiModel} />} />
                 </Routes>
 
                 {/* --- Modals (Global) --- */}

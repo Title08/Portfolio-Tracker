@@ -1,3 +1,12 @@
+"""
+Pydantic models for API request/response validation.
+
+This module defines the data models used for:
+- Portfolio analysis requests
+- News analysis requests  
+- Chat conversation requests
+"""
+
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -32,3 +41,13 @@ class ArticleAnalysisRequest(BaseModel):
     article: NewsItem
     language: Optional[str] = "en"
     model: Optional[str] = "qwen/qwen3-32b"
+
+class ChatMessage(BaseModel):
+    role: str  # 'user' or 'assistant'
+    content: str
+
+class ChatRequest(BaseModel):
+    message: str
+    history: Optional[List[ChatMessage]] = []
+    model: Optional[str] = "qwen/qwen3-32b"
+    language: Optional[str] = "en"
