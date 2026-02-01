@@ -1,5 +1,6 @@
 import yfinance as yf
 import re
+import time
 from fastapi import HTTPException
 
 # Regex to find stock tickers in title (e.g., NVDA, AAPL, MSFT in parentheses or standalone)
@@ -13,6 +14,10 @@ TICKER_EXCLUDES = {
     'KEY', 'BUY', 'SELL', 'HOLD', 'NYSE', 'NASDAQ', 'INDEX', 'DOW', 'JUST',
     'THIS', 'WHAT', 'HOW', 'UP', 'IS', 'IT', 'BE', 'OF', 'TO', 'IN', 'ON'
 }
+
+# In-memory cache for news to speed up repeated requests
+NEWS_CACHE = {}
+NEWS_CACHE_TTL = 60  # seconds
 
 def extract_tickers_from_title(title: str) -> list:
     """Extract potential stock tickers from news title."""
@@ -76,41 +81,40 @@ def get_current_prices(symbols_str: str):
         for symbol in symbol_list:
             try:
                 ticker = tickers.tickers[symbol]
+                price = None
+                prev_close = None
+                change = None
+                change_percent = None
+
                 if hasattr(ticker, 'fast_info'):
                     price = ticker.fast_info.last_price
                     prev_close = ticker.fast_info.previous_close
-                    
-                    if price:
-                        change = price - prev_close if prev_close else 0
-                        change_percent = (change / prev_close * 100) if prev_close else 0
-                        
-                        prices[symbol] = {
-                            "price": price,
-                            "change": change,
-                            "changePercent": change_percent,
-                            "previousClose": prev_close
-                        }
-                        continue
-                
-                # Fallback to history if fast_info fails
-                hist = ticker.history(period="2d")
-                if not hist.empty:
-                    price = hist['Close'].iloc[-1]
-                    prev_close = hist['Close'].iloc[0] if len(hist) > 1 else price
-                    
-                    change = price - prev_close
-                    change_percent = (change / prev_close * 100) if prev_close else 0
-                    
-                    prices[symbol] = {
-                        "price": price,
-                        "change": change,
-                        "changePercent": change_percent,
-                        "previousClose": prev_close
-                    }
-                else:
+
+                # Fallback to history if fast_info is missing or incomplete
+                if not price or not prev_close:
+                    hist = ticker.history(period="2d")
+                    if not hist.empty:
+                        price = price or hist['Close'].iloc[-1]
+                        prev_close = prev_close or (hist['Close'].iloc[0] if len(hist) > 1 else price)
+
+                if price is None:
                     # Absolute fallback
                     price = ticker.info.get('currentPrice', 0)
-                    prices[symbol] = { "price": price, "change": 0, "changePercent": 0, "previousClose": price }
+                    prev_close = prev_close or price
+
+                if prev_close:
+                    change = price - prev_close
+                    change_percent = (change / prev_close * 100) if prev_close else 0
+                else:
+                    change = 0
+                    change_percent = 0
+
+                prices[symbol] = {
+                    "price": price,
+                    "change": change,
+                    "changePercent": change_percent,
+                    "previousClose": prev_close
+                }
             except Exception as e:
                 print(f"Error fetching {symbol}: {e}")
                 prices[symbol] = { "price": 0, "change": 0, "changePercent": 0, "previousClose": 0 }
@@ -124,6 +128,11 @@ def get_market_news(category: str = "general", symbol: str = None, page: int = 0
     Fetch aggregated market news with category filtering or specific symbol.
     """
     try:
+        cache_key = f"{category}:{symbol}:{page}"
+        cached = NEWS_CACHE.get(cache_key)
+        if cached and (time.time() - cached["ts"] < NEWS_CACHE_TTL):
+            return cached["data"]
+
         if symbol:
             target_tickers = [symbol.upper()]
         else:
@@ -223,7 +232,7 @@ def get_market_news(category: str = "general", symbol: str = None, page: int = 0
 
         processed_news = list(all_news_map.values())
         processed_news.sort(key=lambda x: x.get('providerPublishTime', 0) or 0, reverse=True)
-        
+        NEWS_CACHE[cache_key] = {"ts": time.time(), "data": processed_news}
         return processed_news
 
     except Exception as e:
@@ -309,8 +318,8 @@ def get_economic_calendar():
 
 def scrape_forexfactory():
     """
-    Scrape economic calendar from ForexFactory for extended range.
-    Range: Last 1 month + Next 3 months (Total 4 months)
+    Scrape economic calendar from ForexFactory for a short range.
+    Range: Current month + Next 1 month (Total 2 months)
     """
     import requests
     from bs4 import BeautifulSoup
@@ -325,7 +334,7 @@ def scrape_forexfactory():
     
     all_events = []
     
-    # Generate list of 7 months: Last 3 + Current + Next 3
+    # Generate list of 2 months: Current + Next 1
     today = datetime.now()
     months_to_scrape = []
     
@@ -335,9 +344,9 @@ def scrape_forexfactory():
         new_month = (d.month + x - 1) % 12 + 1
         return datetime(new_year, new_month, 1)
 
-    # Scrape 7 months total (from 3 months ago)
-    start_date = add_months(today, -3)
-    for i in range(7):
+    # Scrape 2 months total (current + next)
+    start_date = add_months(today, 0)
+    for i in range(2):
         target_date = add_months(start_date, i)
         month_str = target_date.strftime("%b.%Y").lower() # e.g., oct.2025
         months_to_scrape.append((month_str, target_date.year))
@@ -351,7 +360,7 @@ def scrape_forexfactory():
             url = f"https://www.forexfactory.com/calendar?month={month_str}"
             print(f"Fetching {url}...")
             
-            response = requests.get(url, headers=headers, timeout=15)
+            response = requests.get(url, headers=headers, timeout=8)
             response.raise_for_status()
             
             soup = BeautifulSoup(response.text, 'html.parser')
@@ -445,9 +454,9 @@ def scrape_forexfactory():
                 
                 all_events.append(event_data)
             
-            # Delay to be safe, but not after the last one
+            # Small delay to be polite, but keep it fast
             if month_str != months_to_scrape[-1][0]:
-                time.sleep(2.0)
+                time.sleep(0.2)
                 
         except Exception as e:
             print(f"Error scraping {month_str}: {e}")

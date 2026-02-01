@@ -39,7 +39,12 @@ export default function InvestmentTable({ investments, totalValue, onBuyMore, on
                                 const pnlPercent = costBasis > 0 ? (pnlUSD / costBasis) * 100 : 0;
                                 const isProfit = pnlUSD >= 0;
                                 const pnlColor = isProfit ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
-                                const dayChange = asset.marketChangePercent || 0;
+                                const hasDayChange = Number.isFinite(asset.marketChangePercent);
+                                const hasPrevClose = Number.isFinite(asset.previousClose) && asset.previousClose > 0;
+                                const computedDayChange = hasPrevClose
+                                    ? ((marketPrice - asset.previousClose) / asset.previousClose) * 100
+                                    : 0;
+                                const dayChange = hasDayChange ? asset.marketChangePercent : computedDayChange;
                                 const dayChangeColor = dayChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
 
                                 return (

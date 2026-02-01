@@ -108,12 +108,25 @@ export function usePortfolio() {
                 const priceData = prices[lookupKey];
 
                 if (priceData && typeof priceData === 'object') {
+                    const marketPrice = priceData.price;
+                    const previousClose = priceData.previousClose;
+                    let marketChange = priceData.change;
+                    let marketChangePercent = priceData.changePercent;
+
+                    if ((marketChange === null || marketChange === undefined) && previousClose && marketPrice) {
+                        marketChange = marketPrice - previousClose;
+                    }
+
+                    if ((marketChangePercent === null || marketChangePercent === undefined) && previousClose && marketPrice) {
+                        marketChangePercent = (marketChange / previousClose) * 100;
+                    }
+
                     return {
                         ...asset,
-                        marketPrice: priceData.price,
-                        marketChange: priceData.change,
-                        marketChangePercent: priceData.changePercent,
-                        previousClose: priceData.previousClose
+                        marketPrice: marketPrice,
+                        marketChange: marketChange,
+                        marketChangePercent: marketChangePercent,
+                        previousClose: previousClose
                     };
                 }
                 else if (typeof priceData === 'number' && priceData > 0) {
@@ -129,12 +142,17 @@ export function usePortfolio() {
 
     // Auto Refresh Logic
     useEffect(() => {
+        const initialRefresh = async () => {
+            await refreshPrices();
+        };
+
         const checkAndRefresh = async () => {
             if (isMarketOpen()) {
                 await refreshPrices();
             }
         };
-        checkAndRefresh();
+
+        initialRefresh();
         const intervalId = setInterval(checkAndRefresh, 15000);
         return () => clearInterval(intervalId);
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,6 +1,7 @@
 import { ASSET_DB } from '../constants/assets';
 
 const API_BASE_URL = 'http://localhost:8000';
+const API_ASSETS_BASE_URL = `${API_BASE_URL}/api`;
 
 export const fetchLivePrices = async (assets) => {
     const symbolsToFetch = assets
@@ -15,7 +16,7 @@ export const fetchLivePrices = async (assets) => {
 
     try {
         const query = symbolsToFetch.join(',');
-        const response = await fetch(`${API_BASE_URL}/prices?symbols=${query}`);
+        const response = await fetch(`${API_ASSETS_BASE_URL}/prices?symbols=${query}`);
         if (!response.ok) throw new Error('Network response was not ok');
         return await response.json();
     } catch (error) {
@@ -27,7 +28,7 @@ export const fetchLivePrices = async (assets) => {
 export const searchAssets = async (query) => {
     if (!query) return [];
     try {
-        const response = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`${API_ASSETS_BASE_URL}/search?q=${encodeURIComponent(query)}`);
         if (!response.ok) throw new Error('Search failed');
         return await response.json();
     } catch (error) {
@@ -39,7 +40,7 @@ export const searchAssets = async (query) => {
 export const getAssetInfo = async (symbol) => {
     if (!symbol) return null;
     try {
-        const response = await fetch(`${API_BASE_URL}/info?symbol=${encodeURIComponent(symbol)}`);
+        const response = await fetch(`${API_ASSETS_BASE_URL}/info?symbol=${encodeURIComponent(symbol)}`);
         if (!response.ok) throw new Error('Failed to fetch asset info');
         return await response.json();
     } catch (error) {
@@ -50,7 +51,7 @@ export const getAssetInfo = async (symbol) => {
 
 // --- News API ---
 export const fetchNews = async (category, page, symbol = null) => {
-    let url = `${API_BASE_URL}/news?category=${category}&page=${page}`;
+    let url = `${API_ASSETS_BASE_URL}/news?category=${category}&page=${page}`;
     if (symbol) {
         url += `&symbol=${encodeURIComponent(symbol)}`;
     }
@@ -60,7 +61,7 @@ export const fetchNews = async (category, page, symbol = null) => {
 };
 
 export const analyzeNews = async (payload) => {
-    const response = await fetch(`${API_BASE_URL}/news/analyze`, {
+    const response = await fetch(`${API_ASSETS_BASE_URL}/news/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -73,7 +74,7 @@ export const analyzeNews = async (payload) => {
 };
 
 export const analyzeArticle = async (payload) => {
-    const response = await fetch(`${API_BASE_URL}/news/analyze/article`, {
+    const response = await fetch(`${API_ASSETS_BASE_URL}/news/analyze/article`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -102,7 +103,7 @@ export const analyzePortfolio = async (payload) => {
 // --- Mini Chart API ---
 export const getMiniChart = async (symbol) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/mini-chart?symbol=${encodeURIComponent(symbol)}`);
+        const response = await fetch(`${API_ASSETS_BASE_URL}/mini-chart?symbol=${encodeURIComponent(symbol)}`);
         if (!response.ok) return null;
         const data = await response.json();
         if (data.error) return null;
@@ -116,7 +117,7 @@ export const getMiniChart = async (symbol) => {
 // --- Economic Calendar API ---
 export const getEconomicCalendar = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/economic-calendar`);
+        const response = await fetch(`${API_ASSETS_BASE_URL}/economic-calendar`);
         if (!response.ok) return [];
         return await response.json();
     } catch (error) {

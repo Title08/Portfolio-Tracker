@@ -100,7 +100,8 @@ const NewsPage = ({ aiLanguage = 'en', aiModel = 'qwen/qwen3-32b' }) => {
             else setLoadingMore(true);
 
             // Use search query if active, otherwise category
-            const symbol = query.trim() ? query.trim() : null;
+            const safeQuery = typeof query === 'string' ? query : '';
+            const symbol = safeQuery.trim() ? safeQuery.trim() : null;
 
             const data = await fetchNews(category, pageNum, symbol);
 
