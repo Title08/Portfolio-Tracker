@@ -64,7 +64,7 @@ export default function InvestmentTable({ investments, totalValue, onBuyMore, on
                                         <td className={`px-2 py-3 text-right font-mono text-sm ${dayChangeColor}`}>
                                             {dayChange > 0 ? '+' : ''}{dayChange.toFixed(2)}%
                                         </td>
-                                        <td className="px-2 py-3 text-right text-slate-600 dark:text-slate-200 font-mono font-medium">{formatCurrency(costBasis)}</td>
+                                        <td className="px-2 py-3 text-right text-slate-600 dark:text-slate-200 font-mono font-medium">{formatCurrency(marketValue)}</td>
                                         <td className={`px-2 py-3 text-right font-mono font-medium ${pnlColor}`}>
                                             {pnlUSD > 0 ? '+' : ''}{formatCurrency(pnlUSD)}
                                         </td>

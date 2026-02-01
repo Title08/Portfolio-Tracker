@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, Loader2 } from 'lucide-react';
 import { searchAssets } from '../../services/api';
 
-export default function SymbolSearch({ onSelect, onInputChange, required = false }) {
+export default function SymbolSearch({ onSelect, onInputChange, required = false, value = '', disabled = false }) {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -10,6 +10,14 @@ export default function SymbolSearch({ onSelect, onInputChange, required = false
     const wrapperRef = useRef(null);
 
     const isSelectionRef = useRef(false);
+
+    // Sync external value (e.g., edit/buy more)
+    useEffect(() => {
+        if (typeof value === 'string' && value !== query) {
+            setQuery(value);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value]);
 
     // Debounce search
     useEffect(() => {
@@ -19,7 +27,7 @@ export default function SymbolSearch({ onSelect, onInputChange, required = false
                 return;
             }
 
-            if (query.length >= 1) {
+            if (!disabled && query.length >= 1) {
                 setIsLoading(true);
                 const data = await searchAssets(query);
                 setResults(data);
@@ -59,12 +67,13 @@ export default function SymbolSearch({ onSelect, onInputChange, required = false
                     type="text"
                     required={required}
                     value={query}
+                    disabled={disabled}
                     onChange={(e) => {
                         setQuery(e.target.value);
                         if (onInputChange) onInputChange(e.target.value);
                     }}
                     placeholder="Search e.g. AAPL, BTC-USD"
-                    className="w-full bg-slate-900 border border-emerald-500/50 rounded-lg pl-10 pr-4 py-2 text-white uppercase focus:ring-indigo-500 focus:outline-none placeholder:normal-case"
+                    className={`w-full bg-slate-900 border border-emerald-500/50 rounded-lg pl-10 pr-4 py-2 text-white uppercase focus:ring-indigo-500 focus:outline-none placeholder:normal-case ${disabled ? 'opacity-70 cursor-not-allowed' : ''}`}
                 />
                 <div className="absolute left-3 top-2.5 text-emerald-500">
                     {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}

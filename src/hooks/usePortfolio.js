@@ -411,20 +411,35 @@ export function usePortfolio() {
             if (a.id === sellData.id) {
                 return { ...a, quantity: a.quantity - sellQty };
             }
-            return asset;
+            return a;
         }).filter(a => a.quantity > 0);
 
-        updatedAssets.push({
-            id: Date.now(),
-            name: `Sale: ${sellData.name}`,
-            symbol: 'USD',
-            type: 'Cash',
-            quantity: totalProceedsUSD,
-            price: 1,
-            exchangeRate: sellData.originalRate,
-            currency: 'USD',
-            category: 'Wallet'
-        });
+        const usdWalletIndex = updatedAssets.findIndex(a => a.category === 'Wallet' && a.currency === 'USD');
+        if (usdWalletIndex >= 0) {
+            const usdWallet = updatedAssets[usdWalletIndex];
+            const oldTotalCostTHB = usdWallet.quantity * usdWallet.exchangeRate;
+            const newTotalCostTHB = oldTotalCostTHB + (totalProceedsUSD * sellData.originalRate);
+            const newTotalQty = usdWallet.quantity + totalProceedsUSD;
+            const newAvgRate = newTotalQty > 0 ? newTotalCostTHB / newTotalQty : usdWallet.exchangeRate;
+
+            updatedAssets[usdWalletIndex] = {
+                ...usdWallet,
+                quantity: newTotalQty,
+                exchangeRate: newAvgRate
+            };
+        } else {
+            updatedAssets.push({
+                id: Date.now(),
+                name: `Sale: ${sellData.name}`,
+                symbol: 'USD',
+                type: 'Cash',
+                quantity: totalProceedsUSD,
+                price: 1,
+                exchangeRate: sellData.originalRate,
+                currency: 'USD',
+                category: 'Wallet'
+            });
+        }
         setAssets(updatedAssets);
         return true; // Success
     };

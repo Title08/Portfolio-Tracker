@@ -141,6 +141,8 @@ export default function AddAssetModal({ isOpen, onClose, onAdd, usdWallets, init
                         <div className="space-y-1">
                             <label className="text-xs text-emerald-600 dark:text-emerald-400 uppercase font-bold flex items-center gap-1">Symbol</label>
                             <SymbolSearch
+                                value={newAsset.symbol}
+                                disabled={!!initialData?.symbol}
                                 onSelect={handleSymbolSelect}
                                 onInputChange={(val) => handleInputChange({ target: { name: 'symbol', value: val } })}
                                 required

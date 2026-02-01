@@ -8,6 +8,7 @@ export default function SummaryCard({ totalTHB, investmentsTotal, usdWalletTotal
     const [activeWidget, setActiveWidget] = useState(0); // 0 = Live, 1 = Daily
     const [dailyHistory, setDailyHistory] = useState([]);
     const [timeRange, setTimeRange] = useState('1M');
+    const [renderCharts, setRenderCharts] = useState(false);
 
     const chartData = useMemo(() => {
         return [
@@ -30,6 +31,18 @@ export default function SummaryCard({ totalTHB, investmentsTotal, usdWalletTotal
     useEffect(() => {
         const saved = localStorage.getItem('portfolioDaily_v1');
         if (saved) setDailyHistory(JSON.parse(saved));
+    }, []);
+
+    useEffect(() => {
+        const schedule = () => setRenderCharts(true);
+
+        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+            const id = window.requestIdleCallback(schedule, { timeout: 500 });
+            return () => window.cancelIdleCallback(id);
+        }
+
+        const timer = setTimeout(schedule, 0);
+        return () => clearTimeout(timer);
     }, []);
 
     useEffect(() => {
@@ -140,16 +153,20 @@ export default function SummaryCard({ totalTHB, investmentsTotal, usdWalletTotal
 
                     {/* Pie Chart */}
                     <div className="h-40 w-40 md:h-48 md:w-48 flex-shrink-0 relative">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} paddingAngle={5} dataKey="value">
-                                    {chartData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="rgba(0,0,0,0)" />
-                                    ))}
-                                </Pie>
-                                <RechartsTooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', borderRadius: '12px', color: '#fff' }} formatter={(val) => formatCurrency(val, 'THB')} />
-                            </PieChart>
-                        </ResponsiveContainer>
+                        {renderCharts ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} paddingAngle={5} dataKey="value">
+                                        {chartData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="rgba(0,0,0,0)" />
+                                        ))}
+                                    </Pie>
+                                    <RechartsTooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', borderRadius: '12px', color: '#fff' }} formatter={(val) => formatCurrency(val, 'THB')} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full w-full rounded-full bg-slate-200/70 dark:bg-slate-700/40 animate-pulse" />
+                        )}
                     </div>
                 </div>
 
@@ -217,7 +234,7 @@ export default function SummaryCard({ totalTHB, investmentsTotal, usdWalletTotal
                     <div className="flex-1 min-h-[160px] w-full relative">
                         {/* Live Performance Chart */}
                         <div className={`absolute inset-0 transition-all duration-300 ${activeWidget === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
-                            {lineChartData.length > 1 ? (
+                            {renderCharts && lineChartData.length > 1 ? (
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={lineChartData}>
                                         <XAxis dataKey="time" hide={true} />
@@ -240,7 +257,7 @@ export default function SummaryCard({ totalTHB, investmentsTotal, usdWalletTotal
 
                         {/* Daily Performance Chart */}
                         <div className={`absolute inset-0 transition-all duration-300 ${activeWidget === 1 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
-                            {filteredDailyData.length > 1 ? (
+                            {renderCharts && filteredDailyData.length > 1 ? (
                                 <ResponsiveContainer width="100%" height="100%">
                                     <AreaChart data={filteredDailyData}>
                                         <defs>

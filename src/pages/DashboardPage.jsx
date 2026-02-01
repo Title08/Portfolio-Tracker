@@ -1,10 +1,11 @@
 
+import { lazy, Suspense } from 'react';
 import Navbar from '../components/layout/Navbar';
 
 import SummaryCard from '../components/dashboard/SummaryCard';
 import WalletList from '../components/dashboard/WalletList';
 import InvestmentTable from '../components/dashboard/InvestmentTable';
-import MiniEconomicCalendar from '../components/dashboard/MiniEconomicCalendar';
+const MiniEconomicCalendar = lazy(() => import('../components/dashboard/MiniEconomicCalendar'));
 
 const DashboardPage = ({
     grandTotalTHB,
@@ -72,7 +73,13 @@ const DashboardPage = ({
                             onWithdraw={(item) => openTransactionModal('WITHDRAW', item)}
                             onDelete={(id) => deleteAsset(id)}
                         />
-                        <MiniEconomicCalendar />
+                        <Suspense
+                            fallback={
+                                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 min-h-[240px] animate-pulse" />
+                            }
+                        >
+                            <MiniEconomicCalendar />
+                        </Suspense>
                     </div>
 
                     <div className="lg:col-span-9 xl:col-span-9">
