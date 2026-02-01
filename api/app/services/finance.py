@@ -19,6 +19,10 @@ TICKER_EXCLUDES = {
 NEWS_CACHE = {}
 NEWS_CACHE_TTL = 60  # seconds
 
+# In-memory cache for prices to reduce Yahoo calls
+PRICE_CACHE = {}
+PRICE_CACHE_TTL = 15  # seconds
+
 def extract_tickers_from_title(title: str) -> list:
     """Extract potential stock tickers from news title."""
     if not title:
@@ -75,10 +79,23 @@ def get_current_prices(symbols_str: str):
         
     symbol_list = [s.strip().upper() for s in symbols_str.split(',')]
     prices = {}
+
+    now = time.time()
+    missing_symbols = []
+
+    for symbol in symbol_list:
+        cached = PRICE_CACHE.get(symbol)
+        if cached and (now - cached["ts"] < PRICE_CACHE_TTL):
+            prices[symbol] = cached["data"]
+        else:
+            missing_symbols.append(symbol)
     
     try:
-        tickers = yf.Tickers(' '.join(symbol_list))
-        for symbol in symbol_list:
+        if not missing_symbols:
+            return prices
+
+        tickers = yf.Tickers(' '.join(missing_symbols))
+        for symbol in missing_symbols:
             try:
                 ticker = tickers.tickers[symbol]
                 price = None
@@ -109,15 +126,19 @@ def get_current_prices(symbols_str: str):
                     change = 0
                     change_percent = 0
 
-                prices[symbol] = {
+                result = {
                     "price": price,
                     "change": change,
                     "changePercent": change_percent,
                     "previousClose": prev_close
                 }
+                prices[symbol] = result
+                PRICE_CACHE[symbol] = {"ts": time.time(), "data": result}
             except Exception as e:
                 print(f"Error fetching {symbol}: {e}")
-                prices[symbol] = { "price": 0, "change": 0, "changePercent": 0, "previousClose": 0 }
+                result = { "price": 0, "change": 0, "changePercent": 0, "previousClose": 0 }
+                prices[symbol] = result
+                PRICE_CACHE[symbol] = {"ts": time.time(), "data": result}
         return prices
     except Exception as e:
         print(f"Batch fetch error: {e}")
